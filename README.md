@@ -153,3 +153,13 @@ This module provides a framework for querying documents efficiently using multip
 - **CFG Generation**: Uses Soot to generate a Control Flow Graph (CFG).
 - **FDG Extraction**: Uses BCEL to extract a Functional Dependency Graph (FDG).
 - Outputs analysis results as a JSON file.
+
+
+Example prompt responses when used with OpenAI ChatGPT. A larger LLM with more parameters may yield better results."
+![Screenshot from 2025-02-13 11-32-15](https://github.com/user-attachments/assets/0c090956-2947-45a7-9240-5021155e66e4)
+
+
+![Screenshot from 2025-02-13 11-32-31](https://github.com/user-attachments/assets/731a9b2b-6020-4d4f-a0b4-6b2be95019c9)
+
+
+
