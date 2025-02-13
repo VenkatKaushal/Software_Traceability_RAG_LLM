@@ -1,0 +1,23 @@
+CODE_METHODS = 'methods'
+CODE_METHOD_CALLS = 'method_calls'
+FILE_NAME_LABEL = "File Name"
+CLASS_NAME_LABEL = "Class Name"
+DOCSTRING_LABEL = "Docstring"
+ATTRIBUTES_LABEL = "Attributes"
+ATTRIBUTE_NAME_LABEL = "Attribute Name"
+ATTRIBUTES_TYPE_LABEL = "Attribute Type"
+METHODS_LABEL = "Methods"
+METHOD_NAME_LABEL = "Method Name"
+METHOD_SIGNATURE_LABEL = "Signature"
+METHOD_DOCSTRING = "Method Docstring"
+METHOD_PARAMETERS_LABEL = "Method Parameters"
+METHOD_RETURN_LABEL = "Method Return"
+PARAMETERS = "Parameters"
+PARAM_NAME_LABEL = "Parameter Name"
+PARAM_TYPE_LABEL = "Parameter Type"
+PARAM_DESCRIPTION_LABEL = "Description"
+CALLS_LABEL = "calls"
+CALLED_BY_LABEL = "called_by"
+
+SRC_METHOD_LABEL = "SRC_METHOD"
+DEST_METHOD_LABEL = "DEST_METHOD"
