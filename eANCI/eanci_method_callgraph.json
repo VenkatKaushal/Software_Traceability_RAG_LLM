@@ -1,0 +1,249 @@
+{
+    "Bike.Bike(String)": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Bike",
+        "method_name": "Bike",
+        "params": [
+            "String"
+        ]
+    },
+    "Car.Car(String)": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Car",
+        "method_name": "Car",
+        "params": [
+            "String"
+        ]
+    },
+    "ElectricCar.ElectricCar(String)": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "ElectricCar",
+        "method_name": "ElectricCar",
+        "params": [
+            "String"
+        ]
+    },
+    "Entries_Exits.CheckPayment(Vehicle,int)": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Entries_Exits",
+        "method_name": "CheckPayment",
+        "params": [
+            "Vehicle",
+            "int"
+        ]
+    },
+    "Entries_Exits.PaymentOptions()": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Entries_Exits",
+        "method_name": "PaymentOptions",
+        "params": []
+    },
+    "Entry.CheckPayment(Vehicle,int)": {
+        "calls": [],
+        "called_by": [
+            "Entries_Exits.CheckPayment(Vehicle,int)"
+        ],
+        "class_name": "Entry",
+        "method_name": "CheckPayment",
+        "params": [
+            "Vehicle",
+            "int"
+        ]
+    },
+    "Entry.PaymentOptions()": {
+        "calls": [],
+        "called_by": [
+            "Entries_Exits.PaymentOptions()"
+        ],
+        "class_name": "Entry",
+        "method_name": "PaymentOptions",
+        "params": []
+    },
+    "Entry.PrePayment(long,Vehicle)": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Entry",
+        "method_name": "PrePayment",
+        "params": [
+            "long",
+            "Vehicle"
+        ]
+    },
+    "Entry.AssignInTime(Vehicle)": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Entry",
+        "method_name": "AssignInTime",
+        "params": [
+            "Vehicle"
+        ]
+    },
+    "Exit.CheckPayment(Vehicle,int)": {
+        "calls": [
+            "Exit.GenerateBill(long,int)"
+        ],
+        "called_by": [
+            "Entries_Exits.CheckPayment(Vehicle,int)"
+        ],
+        "class_name": "Exit",
+        "method_name": "CheckPayment",
+        "params": [
+            "Vehicle",
+            "int"
+        ]
+    },
+    "Exit.PaymentOptions()": {
+        "calls": [],
+        "called_by": [
+            "Entries_Exits.PaymentOptions()"
+        ],
+        "class_name": "Exit",
+        "method_name": "PaymentOptions",
+        "params": []
+    },
+    "Exit.GenerateBill(long,int)": {
+        "calls": [],
+        "called_by": [
+            "Exit.CheckPayment(Vehicle,int)"
+        ],
+        "class_name": "Exit",
+        "method_name": "GenerateBill",
+        "params": [
+            "long",
+            "int"
+        ]
+    },
+    "Exit.AssignOutTime(Vehicle)": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Exit",
+        "method_name": "AssignOutTime",
+        "params": [
+            "Vehicle"
+        ]
+    },
+    "Floor.DisplaySlots()": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Floor",
+        "method_name": "DisplaySlots",
+        "params": []
+    },
+    "Floor.DisplayEntries()": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Floor",
+        "method_name": "DisplayEntries",
+        "params": []
+    },
+    "Floor.DisplayExits()": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Floor",
+        "method_name": "DisplayExits",
+        "params": []
+    },
+    "Floor.AllocateParkingLot(Vehicle)": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Floor",
+        "method_name": "AllocateParkingLot",
+        "params": [
+            "Vehicle"
+        ]
+    },
+    "FunctioningOfParkingLot.main(String[])": {
+        "calls": [
+            "Management.Management(int)",
+            "User.User()"
+        ],
+        "called_by": [],
+        "class_name": "FunctioningOfParkingLot",
+        "method_name": "main",
+        "params": [
+            "String[]"
+        ]
+    },
+    "Management.Management(int)": {
+        "calls": [],
+        "called_by": [
+            "FunctioningOfParkingLot.main(String[])"
+        ],
+        "class_name": "Management",
+        "method_name": "Management",
+        "params": [
+            "int"
+        ]
+    },
+    "Slot.getSlotId()": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Slot",
+        "method_name": "getSlotId",
+        "params": []
+    },
+    "Slot.MakeSlotFree(int)": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Slot",
+        "method_name": "MakeSlotFree",
+        "params": [
+            "int"
+        ]
+    },
+    "Slot.SlotStatusSetter(boolean)": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Slot",
+        "method_name": "SlotStatusSetter",
+        "params": [
+            "boolean"
+        ]
+    },
+    "Truck.Truck(String)": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Truck",
+        "method_name": "Truck",
+        "params": [
+            "String"
+        ]
+    },
+    "User.Enter(Management,int,int)": {
+        "calls": [
+            "Floor.AllocateParkingLot(Vehicle)"
+        ],
+        "called_by": [],
+        "class_name": "User",
+        "method_name": "Enter",
+        "params": [
+            "Management",
+            "int",
+            "int"
+        ]
+    },
+    "User.Exit(Management,int)": {
+        "calls": [
+            "Exit.CheckPayment(Vehicle,int)"
+        ],
+        "called_by": [],
+        "class_name": "User",
+        "method_name": "Exit",
+        "params": [
+            "Management",
+            "int"
+        ]
+    },
+    "Vehicle.PayFee()": {
+        "calls": [],
+        "called_by": [],
+        "class_name": "Vehicle",
+        "method_name": "PayFee",
+        "params": []
+    }
+}

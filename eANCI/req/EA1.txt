@@ -1,0 +1,1 @@
+A user arrives at the parking facility and selects the entry gate. The system verifies if the fee has been prepaid or requires payment. The user is assigned a parking slot based on vehicle type.

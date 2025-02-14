@@ -1,0 +1,1 @@
+Users can prepay for parking or pay upon exit using different payment methods (card, attendant, or portal). The system maintains a record of payments and balances.

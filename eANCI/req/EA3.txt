@@ -1,0 +1,1 @@
+The system dynamically assigns available slots based on vehicle type, ensuring proper space utilization. If no suitable slot is available, the user is prompted to wait or choose another floor.

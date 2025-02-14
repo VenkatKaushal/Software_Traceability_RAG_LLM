@@ -1,0 +1,1 @@
+If a user parks an electric vehicle, they have the option to charge it. The system calculates the cost based on units consumed and updates the final bill accordingly.
