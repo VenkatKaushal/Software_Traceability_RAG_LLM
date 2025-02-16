@@ -1,3 +1,36 @@
+"""
+This script configures and utilizes a custom LLM (Large Language Model) class using HuggingFace's transformer models. It provides the functionality to set up both embedding models and LLMs, generate predictions, and handle streaming and asynchronous operations.
+
+Functions and Classes:
+
+1. set_embed_model:
+   - Sets the embedding model for use, defaulting to "BAAI/bge-small-en-v1.5". This model is used for embedding text.
+
+2. set_llm:
+   - Configures the LLM based on the given type (e.g., "deepseek", "llama2", "mistral"). If no specific LLM type is provided, a default LLM is set. This function does not require API keys for the LLM configuration.
+
+3. set_llm_and_embed:
+   - A convenience function that sets both the LLM and embedding model. It uses default settings if no specific model names are provided.
+
+4. LLM (Main Class):
+   - This class defines the core LLM used in the script, extending from the `LLM` class. It handles the initialization of model and tokenizer, setting device types (CPU or CUDA), and providing methods for generating completions and chatting.
+   - It includes:
+     - `metadata`: Returns metadata for the LLM such as the model name and max tokens.
+     - `chat`: Processes chat messages and returns a `ChatResponse`.
+     - `complete`: Processes a prompt and generates a completion response.
+     - `predict`: Runs the model on a formatted prompt and generates the output text.
+     - `stream_chat` and `stream_complete`: These methods return responses as generators for streaming output.
+     - `achat` and `acomplete`: Asynchronous methods to handle chat and completion tasks.
+     - `astream_chat` and `astream_complete`: Asynchronous generators that stream chat and completion responses.
+
+Dependencies:
+- llama_index: Used for working with various indexing, LLM, and prompt templates.
+- transformers: For model handling with HuggingFace's transformers library.
+- torch: For interacting with models on either CPU or GPU.
+- huggingface_hub: To enable login and access HuggingFace models.
+- asyncio: Used for asynchronous operations in the chat and completion streams.
+"""
+
 from llama_index import *
 import subprocess
 from typing import Sequence, Any, List, Generator, AsyncGenerator

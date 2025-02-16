@@ -1,3 +1,50 @@
+"""
+This script performs various tasks related to indexing, retrieving, and evaluating datasets for a RAG (Retrieval-Augmented Generation) system.
+
+Functions:
+
+1. get_vector_index: 
+   Creates a vector index from the given documents and stores it in a specified path.
+   It utilizes the `get_vector_storage_context` to set up the storage and calls `create_vector_index` to create the index.
+
+2. get_kg_links_index: 
+   Creates a Knowledge Graph (KG) links index using documents and graph nodes.
+   Uses `get_graph_store` to configure the graph storage context and `create_knowledge_graph_index` to create the index.
+
+3. clean_text: 
+   Cleans the input text by removing extra spaces, non-ASCII characters, and trimming any leading or trailing whitespace.
+
+4. get_kw_table_index: 
+   Creates a Keyword Table Index using the provided documents, either using a vector store or creating a new index with `create_keyword_table_index`.
+
+5. get_kg_index: 
+   Creates a Knowledge Graph Index using documents and graph nodes.
+   Retrieves the graph storage context via `get_graph_store` and creates the index with `KnowledgeGraphIndex.from_documents`.
+
+6. get_code_nodes: 
+   Retrieves and processes code nodes by calling `get_code_graph_nodes` to extract graph nodes and then indexing them with `create_code_graph_nodes_index`.
+
+7. execute_dataset: 
+   The main function responsible for processing the dataset, including creating indices (vector, keyword table, knowledge graph), setting up query engines, and evaluating the correctness of the RAG system.
+   This function also handles file operations, including saving indexed documents and solutions.
+
+8. main:
+   Configures the datasets and models to be used, and iterates over the configurations to execute the dataset processing using the `execute_dataset` function.
+
+Dependencies:
+- llama_index: Provides functionality for document indexing and retrieval.
+- evaluation: Contains methods for evaluating the correctness and retrieval performance.
+- req2nodes: Used to convert requirements into nodes.
+- querying: Provides functionality for custom query engines.
+- api_models: Used to set LLMs and embedding models.
+- indexing: Contains utilities for indexing and creating various types of indices.
+- constants: Stores mappings for LLMs and embedding models.
+- parameters: Provides argument parsing functionality.
+
+The script assumes that required directories and files exist and are correctly configured.
+"""
+
+
 import pickle
 from typing import List
 import json

@@ -1,6 +1,0 @@
-Cancellation of the city
-
-The clerk presses the Citizen Cancellation Button
-The system asks the employee a confirmation
-The employee confirms the operation
-The system cancels the citizen

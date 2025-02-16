@@ -1,3 +1,40 @@
+"""
+This script defines custom retrievers and query handling for a multi-retriever framework, as well as the logic for running multiple queries in parallel. It includes functionalities for fusing results from different retrieval sources, generating additional queries, and retrieving data in parallel to improve efficiency.
+
+Classes:
+
+1. FusionRetriever:
+   - An ensemble retriever that combines multiple retrievers' results using a fusion mechanism. It generates multiple queries, runs them against the retrievers in parallel, and then fuses the results to produce a final list of nodes.
+
+2. CustomRetriever:
+   - A custom retriever that performs both vector search and knowledge graph search. It retrieves nodes from both sources (vector and knowledge graph) and combines them based on a mode ("AND" or "OR").
+
+Functions:
+
+1. generate_queries:
+   - Generates a set of queries from a given input query string by formatting it with a prompt template and running it through an LLM (Large Language Model).
+
+2. fuse_results:
+   - Fuses results from multiple retrievers by re-ranking them based on their score and rank. It uses a combination of scores to decide the final ranking and returns the top results based on a given similarity threshold.
+
+3. run_queries:
+   - Runs a list of queries asynchronously across multiple retrievers using a `ThreadPoolExecutor` for parallel processing. It gathers the results and organizes them by query.
+
+4. get_reachable_nodes:
+   - Retrieves nodes that are reachable from a given source node in a graph within a specified distance, using the single-source shortest path length.
+
+5. retrieve_parallel:
+   - A function that retrieves nodes in parallel for multiple requirements. It uses `ThreadPoolExecutor` to parallelize the retrieval process across multiple threads and tracks progress with a progress bar.
+
+Dependencies:
+- networkx: Used for graph-based operations.
+- llama_index: Provides base classes and functionality for retrieval systems, query handling, and indexing.
+- tqdm.asyncio: For asynchronous progress bars.
+- asyncio: For handling asynchronous operations.
+"""
+
+
+
 from concurrent.futures import ThreadPoolExecutor
 import networkx as nx
 from llama_index.core import QueryBundle

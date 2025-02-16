@@ -1,4 +1,5 @@
-"""Set of default prompts refined for Gemma2 2B to avoid prompt repetition."""
+"""Set of default prompts refined for LLM to avoid prompt repetition."""    
+""" Replace this file with the one in: llama-index-core/llama_index/core/prompts/default_prompts.py """
 
 from llama_index.core.prompts.base import PromptTemplate
 from llama_index.core.prompts.prompt_type import PromptType

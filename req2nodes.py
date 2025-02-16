@@ -1,3 +1,29 @@
+"""
+This script defines the logic for creating and retrieving requirement nodes from files. It loads requirement documents, processes them into nodes, and prepares them for further use in a retrieval-based system.
+
+Classes:
+
+1. RequirementsNodesCreator:
+   - A class responsible for creating nodes from the requirement documents. It takes a base directory and a dictionary of requirement file contents, and for each file, it creates a `Document` object with the text and metadata.
+
+Functions:
+
+1. create_nodes:
+   - Creates nodes for each requirement document. It iterates through the provided dictionary of requirement contents, creating a `Document` object for each one, with metadata such as the file name. The method returns a list of `Document` nodes.
+
+2. get_requirements_docs:
+   - Loads all the requirement files specified in `all_req_filenames.txt` from the base directory and returns their contents in a dictionary, where the keys are the file names and the values are the file contents.
+
+3. get_requirements_nodes:
+   - Retrieves all requirement documents and then uses `RequirementsNodesCreator` to create nodes from them. It returns the list of nodes created.
+
+Dependencies:
+- os: Used to handle file paths.
+- llama_index: Provides the `Document` class for creating documents from text.
+- tqdm.auto: For progress tracking during file processing.
+"""
+
+
 import os
 from llama_index.core import Document
 from tqdm.auto import tqdm

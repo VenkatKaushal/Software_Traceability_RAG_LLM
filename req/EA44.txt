@@ -1,4 +1,0 @@
-View Practical Waiting Employee
-
-Employee Select View requests Waiting
-The system shows the list of waiting practices

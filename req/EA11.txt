@@ -1,6 +1,0 @@
-Change citizen
-
-The employee presses the city edit button
-The system shows a form for the change of the citizen
-The employee inserts the data
-The system saves the changes made

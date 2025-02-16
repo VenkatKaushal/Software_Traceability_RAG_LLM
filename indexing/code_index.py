@@ -1,3 +1,28 @@
+"""
+This script provides utilities for creating documents representing code, managing method call links between nodes, and adding relationships between nodes in a graph. It works with code graph nodes, extracting class and method information, and associating them with their relationships.
+
+Functions and Classes:
+
+1. create_class_node_doc:
+   - Creates a `Document` representing a class from the provided graph node. It includes attributes, methods, method signatures, and relationships such as method calls and "called by" links. The document also includes metadata such as the class name and method information.
+
+2. create_code_graph_nodes_index:
+   - Generates a list of documents from a collection of graph nodes (representing classes). Each document contains information about a class and its methods, created by calling `create_class_node_doc` for each class node.
+
+3. add_node_relationships:
+   - Adds relationships between nodes. It associates related nodes (given in the `related_nodes` list) with a specific relationship type (like NEXT, PREVIOUS, PARENT, or CHILD).
+
+4. add_method_call_links_to_docs:
+   - Adds method call links to the documents, establishing relationships between methods. It maps method signatures to nodes and adds links based on method calls (e.g., `calls`, `called by`). This function uses `add_node_relationships` to store the relationships.
+
+Dependencies:
+- ast: Used for parsing and evaluating string representations of Python data structures (used for method call information).
+- collections: Provides `defaultdict` for managing method call relationships.
+- tqdm.auto: Displays progress bars during document processing.
+- llama_index: Provides classes like `Document` and `NodeRelationship` for working with indexed nodes and relationships.
+- indexing.constants: Includes constants for method and class labels, used throughout the script.
+"""
+
 import ast
 from collections import defaultdict
 from typing import Dict, List

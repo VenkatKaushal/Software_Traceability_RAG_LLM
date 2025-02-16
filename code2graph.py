@@ -1,3 +1,58 @@
+
+"""
+This script processes Java code files to generate and analyze class and method information, builds a call graph using NetworkX, and extracts relationships between classes and methods. The code includes functionality for parsing Java files, creating method call graphs, and storing class and method metadata. It integrates with tools like `javalang` for parsing Java source code and `networkx` for building graph structures.
+
+Functions:
+
+1. create_networkx_from_class_docs:
+   - Generates a NetworkX directed graph from a list of class documents. It processes method calls and relationships between classes, adding nodes and edges to the graph.
+
+2. parse_java_file:
+   - Parses a Java file to extract class and method information, including attributes, methods, and their parameters. The function returns a dictionary with class details such as name, docstring, attributes, and methods.
+
+3. get_graph_nodes:
+   - Processes a list of class info objects and creates graph nodes for each class and method, storing them in a dictionary. It handles the creation of nodes for classes and methods with their associated metadata.
+
+4. get_class_info_objects:
+   - Loads Java files from a specified directory, parses them using `parse_java_file`, and returns a list of class info objects containing details about the classes and methods.
+
+5. add_method_calls:
+   - Adds method call information to the graph nodes from a provided call graph file. It updates the graph with `calls` and `called_by` relationships for each method.
+
+6. get_signature_contents:
+   - Extracts the class name, method name, and parameters from a method signature, returning them as a dictionary.
+
+7. extract_call_graph_links:
+   - Extracts the call graph links from the graph nodes, organizing them into a dictionary of source and destination method signatures.
+
+8. add_methods_to_class_nodes:
+   - Adds methods to class nodes by matching methods with their respective class names. It updates the class node with a list of methods.
+
+9. get_code_graph_nodes:
+   - Combines the steps of extracting class info, building the graph, adding method calls, and associating methods with class nodes. It returns a dictionary of graph nodes representing classes and methods.
+
+10. get_graph_node_str:
+   - Generates a string representation of a graph node (class or method), including class name, docstring, attributes, and method names.
+
+11. get_code_nodes:
+   - Loads code files specified in a list, returning the contents of those files as a list of strings.
+
+12. get_docs_nxg:
+   - Generates class documents from code graph nodes and creates a NetworkX graph representing the relationships between them.
+
+Dependencies:
+- json: For reading and writing JSON files.
+- os: For file path operations.
+- javalang: For parsing Java code.
+- ast: For processing and evaluating Python code.
+- networkx: For creating and manipulating directed graphs.
+- tqdm.auto: For displaying progress bars during processing.
+- java_analysis: For performing analysis of Java code (e.g., extracting AST, CFG, FDG).
+- indexing.code_index: For creating class node documents.
+- indexing.constants: For constants related to code analysis.
+"""
+
+
 import json
 import os
 import javalang
