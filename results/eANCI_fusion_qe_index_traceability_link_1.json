@@ -1,0 +1,34 @@
+{
+    "EA1.txt": [
+        "ServletLogin",
+        "Administrator"
+    ],
+    "EA2.txt": [
+        "ServletCreatePdfCitizen",
+        "Administrator"
+    ],
+    "EA3.txt": [
+        "Administrator"
+    ],
+    "EA4.txt": [
+        "ServletCancel"
+    ],
+    "EA5.txt": [
+        "Administrator"
+    ],
+    "EA6.txt": [
+        "Administrator"
+    ],
+    "EA7.txt": [
+        "Administrator"
+    ],
+    "EA8.txt": [
+        "Administrator"
+    ],
+    "EA9.txt": [
+        "Administrator"
+    ],
+    "EA10.txt": [
+        "Administrator"
+    ]
+}

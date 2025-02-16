@@ -1,0 +1,34 @@
+{
+    "EA1.txt": [
+        "Administrator"
+    ],
+    "EA2.txt": [
+        "ServletLogin"
+    ],
+    "EA3.txt": [
+        "ServletLogin"
+    ],
+    "EA4.txt": [
+        "ServletCancel"
+    ],
+    "EA5.txt": [
+        "ServletCancel"
+    ],
+    "EA6.txt": [
+        "Citizen"
+    ],
+    "EA7.txt": [
+        "ServletInsertEmployee",
+        "EmployeeDao",
+        "EmployeeEntity"
+    ],
+    "EA8.txt": [
+        "Administrator"
+    ],
+    "EA9.txt": [
+        "ServletLogout"
+    ],
+    "EA10.txt": [
+        "ServletDeleteEmployee"
+    ]
+}

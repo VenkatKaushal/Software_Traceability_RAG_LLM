@@ -1,0 +1,39 @@
+{
+    "EA1.txt": [
+        "ServletLogin"
+    ],
+    "EA2.txt": [
+        "ServletLogin"
+    ],
+    "EA3.txt": [
+        "ServletLogin"
+    ],
+    "EA4.txt": [
+        "DbException",
+        "ServletEliminaCittadino",
+        "ServletLogin"
+    ],
+    "EA5.txt": [
+        "ServletEliminaAmministratore",
+        "ServletLogin",
+        "ControllerFiles"
+    ],
+    "EA6.txt": [
+        "ControllerFiles",
+        "ServletInserisciCittadino",
+        "ServletLogin"
+    ],
+    "EA7.txt": [
+        "ServletInserisciImpiegato",
+        "ServletLogin"
+    ],
+    "EA8.txt": [
+        "ServletLogin"
+    ],
+    "EA9.txt": [
+        "ServletLogin"
+    ],
+    "EA10.txt": [
+        "ServletLogin"
+    ]
+}
