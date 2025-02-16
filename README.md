@@ -1,5 +1,5 @@
 
-# NL2CodeTrace: Code Understanding and Traceability with LlamaIndex & Graph Databases
+# NL2CodeTrace: Code Understanding and Traceability
 ==================================================================================
 
 ## Overview
@@ -11,9 +11,9 @@ LLMs (Large Language Models) and structured retrieval techniques.
 
 This project leverages:
 - LlamaIndex for indexing, retrieval, and querying of code and documentation.
-- Neo4j / Kuzu as graph stores for knowledge representation.
+- Neo4j as graph stores for knowledge representation.
 - ChromaDB as a vector store for efficient similarity search.
-- Transformers-based LLMs (e.g., Mistral, Llama2, DeepSeek, Gemma) for natural language-based queries and code generation.
+- Transformers-based LLMs for natural language-based queries and code generation.
 
 ## Key Features
 ------------
