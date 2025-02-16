@@ -1,0 +1,85 @@
+[
+    [
+        {
+            "file_name": "EA1.txt",
+            "expected_classes": [
+                "Entry",
+                "Floor",
+                "Management",
+                "User",
+                "Vehicle"
+            ],
+            "llm_classes": [
+                "Entries_exits",
+                "User",
+                "Vehicle"
+            ]
+        },
+        {
+            "file_name": "EA2.txt",
+            "expected_classes": [
+                "Exit",
+                "Floor",
+                "Management",
+                "User",
+                "Vehicle"
+            ],
+            "llm_classes": [
+                "Entry",
+                "Exit"
+            ]
+        },
+        {
+            "file_name": "EA3.txt",
+            "expected_classes": [
+                "Floor",
+                "Management",
+                "Slot",
+                "Vehicle"
+            ],
+            "llm_classes": [
+                "Entry",
+                "Exit",
+                "Management"
+            ]
+        },
+        {
+            "file_name": "EA4.txt",
+            "expected_classes": [
+                "Entry",
+                "Exit",
+                "User",
+                "Vehicle"
+            ],
+            "llm_classes": [
+                "Car",
+                "Class",
+                "Entries_Exits",
+                "Methods",
+                "PaymentOptions",
+                "Vehicle",
+                "Vehicles"
+            ]
+        },
+        {
+            "file_name": "EA5.txt",
+            "expected_classes": [
+                "ElectricCar",
+                "Floor",
+                "User",
+                "Vehicle"
+            ],
+            "llm_classes": [
+                "Entry",
+                "Exit",
+                "User",
+                "Vehicle"
+            ]
+        }
+    ],
+    {
+        "precision": 0.3684210526315789,
+        "recall": 0.3181818181818182,
+        "f1": 0.3414634146341463
+    }
+]

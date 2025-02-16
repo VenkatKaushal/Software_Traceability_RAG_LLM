@@ -1,0 +1,71 @@
+[
+    [
+        {
+            "file_name": "EA1.txt",
+            "expected_classes": [
+                "Entry",
+                "Floor",
+                "Management",
+                "User",
+                "Vehicle"
+            ],
+            "llm_classes": [
+                "Slot"
+            ]
+        },
+        {
+            "file_name": "EA2.txt",
+            "expected_classes": [
+                "Exit",
+                "Floor",
+                "Management",
+                "User",
+                "Vehicle"
+            ],
+            "llm_classes": [
+                "Slot"
+            ]
+        },
+        {
+            "file_name": "EA3.txt",
+            "expected_classes": [
+                "Floor",
+                "Management",
+                "Slot",
+                "Vehicle"
+            ],
+            "llm_classes": [
+                "Slot"
+            ]
+        },
+        {
+            "file_name": "EA4.txt",
+            "expected_classes": [
+                "Entry",
+                "Exit",
+                "User",
+                "Vehicle"
+            ],
+            "llm_classes": [
+                "Slot"
+            ]
+        },
+        {
+            "file_name": "EA5.txt",
+            "expected_classes": [
+                "ElectricCar",
+                "Floor",
+                "User",
+                "Vehicle"
+            ],
+            "llm_classes": [
+                "Slot"
+            ]
+        }
+    ],
+    {
+        "precision": 0.2,
+        "recall": 0.045454545454545456,
+        "f1": 0.07407407407407407
+    }
+]
