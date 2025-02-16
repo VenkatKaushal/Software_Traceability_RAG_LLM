@@ -1,39 +1,28 @@
 {
     "EA1.txt": [
-        "ServletLogin"
+        "Entries_exits",
+        "User",
+        "Vehicles"
     ],
     "EA2.txt": [
-        "ServletLogin"
+        "Entry",
+        "Exit"
     ],
     "EA3.txt": [
-        "ServletLogin"
+        "Entries_Exits",
+        "Vehicles"
     ],
     "EA4.txt": [
-        "DbException",
-        "ServletEliminaCittadino",
-        "ServletLogin"
+        "Class",
+        "PaymentOptions",
+        "Entries_Exits",
+        "Car",
+        "Vehicles"
     ],
     "EA5.txt": [
-        "ServletEliminaAmministratore",
-        "ServletLogin",
-        "ControllerFiles"
-    ],
-    "EA6.txt": [
-        "ControllerFiles",
-        "ServletInserisciCittadino",
-        "ServletLogin"
-    ],
-    "EA7.txt": [
-        "ServletInserisciImpiegato",
-        "ServletLogin"
-    ],
-    "EA8.txt": [
-        "ServletLogin"
-    ],
-    "EA9.txt": [
-        "ServletLogin"
-    ],
-    "EA10.txt": [
-        "ServletLogin"
+        "Entry",
+        "Exit",
+        "User",
+        "Vehicle"
     ]
 }

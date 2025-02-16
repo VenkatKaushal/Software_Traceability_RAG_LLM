@@ -1,34 +1,17 @@
 {
     "EA1.txt": [
-        "ServletLogin",
-        "Administrator"
+        "Entry"
     ],
     "EA2.txt": [
-        "ServletCreatePdfCitizen",
-        "Administrator"
+        "User"
     ],
     "EA3.txt": [
-        "Administrator"
+        "Slot"
     ],
     "EA4.txt": [
-        "ServletCancel"
+        "User"
     ],
     "EA5.txt": [
-        "Administrator"
-    ],
-    "EA6.txt": [
-        "Administrator"
-    ],
-    "EA7.txt": [
-        "Administrator"
-    ],
-    "EA8.txt": [
-        "Administrator"
-    ],
-    "EA9.txt": [
-        "Administrator"
-    ],
-    "EA10.txt": [
-        "Administrator"
+        "ElectricCar"
     ]
 }

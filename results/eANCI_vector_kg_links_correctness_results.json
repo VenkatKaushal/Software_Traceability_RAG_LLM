@@ -3,230 +3,79 @@
         {
             "file_name": "EA1.txt",
             "expected_classes": [
-                "AccessManager",
-                "Accesso",
-                "AdminManager",
-                "Amministratore",
-                "DbAccesso",
-                "DbAmministratore",
-                "DbConnection",
-                "DbException",
-                "ServletAnnulla",
-                "ServletLogin",
-                "ServletMostraAccesso"
+                "Entry",
+                "Floor",
+                "Management",
+                "User",
+                "Vehicle"
             ],
             "llm_classes": [
-                "Administrator",
-                "DbException",
-                "ServletLogin"
+                "Entry",
+                "Exit",
+                "Management",
+                "User",
+                "Vehicle"
             ]
         },
         {
             "file_name": "EA2.txt",
             "expected_classes": [
-                "AccessManager",
-                "Accesso",
-                "AdminManager",
-                "CIManager",
-                "CartaIdentita",
-                "Cittadino",
-                "CittadinoManager",
-                "DbAccesso",
-                "DbCartaIdentita",
-                "DbCittadino",
-                "DbComune",
-                "DbConnection",
-                "ServletAnnulla",
-                "ServletLogin",
-                "ServletMostraAccessoA"
+                "Exit",
+                "Floor",
+                "Management",
+                "User",
+                "Vehicle"
             ],
             "llm_classes": [
-                "DbException",
-                "ServletLogin"
+                "Entry",
+                "Exit"
             ]
         },
         {
             "file_name": "EA3.txt",
             "expected_classes": [
-                "AccessManager",
-                "Accesso",
-                "AdminManager",
-                "DbAccesso",
-                "DbImpiegato",
-                "Impiegato",
-                "ImpiegatoManager",
-                "ServletAnnulla",
-                "ServletLogin",
-                "ServletMostraAccesso"
+                "Floor",
+                "Management",
+                "Slot",
+                "Vehicle"
             ],
             "llm_classes": [
-                "ServletLogin"
+                "Entry",
+                "Exit",
+                "Vehicle"
             ]
         },
         {
             "file_name": "EA4.txt",
             "expected_classes": [
-                "AccessManager",
-                "Accesso",
-                "CIManager",
-                "CartaIdentita",
-                "Cittadino",
-                "CittadinoManager",
-                "DbAccesso",
-                "DbCartaIdentita",
-                "DbCittadino",
-                "DbConnection",
-                "DbException",
-                "DbNucleoFamiliare",
-                "NucleoFamiliare",
-                "NucleoFamiliareManager",
-                "ServletAnnulla",
-                "ServletEliminaCittadino",
-                "ServletModificaCittadino",
-                "ServletRicercaCittadino",
-                "ServletStatoDiFamiglia"
+                "Entry",
+                "Exit",
+                "User",
+                "Vehicle"
             ],
             "llm_classes": [
-                "ServletCancel",
-                "ServletLogin"
+                "Entry",
+                "PaymentOptions"
             ]
         },
         {
             "file_name": "EA5.txt",
             "expected_classes": [
-                "AccessManager",
-                "Accesso",
-                "AdminManager",
-                "DbAccesso",
-                "DbConnection",
-                "DbException",
-                "DbImpiegato",
-                "Impiegato",
-                "ImpiegatoManager",
-                "ServletAnnulla",
-                "ServletEliminaImpiegato"
+                "ElectricCar",
+                "Floor",
+                "User",
+                "Vehicle"
             ],
             "llm_classes": [
-                "ControllerFiles",
-                "ServletCancel",
-                "ServletLogin"
-            ]
-        },
-        {
-            "file_name": "EA6.txt",
-            "expected_classes": [
-                "AccessManager",
-                "Accesso",
-                "CIManager",
-                "CartaIdentita",
-                "Cittadino",
-                "CittadinoManager",
-                "DbAccesso",
-                "DbCartaIdentita",
-                "DbCittadino",
-                "DbConnection",
-                "DbException",
-                "DbNucleoFamiliare",
-                "NucleoFamiliare",
-                "NucleoFamiliareManager",
-                "ServletAnnulla",
-                "ServletInserisciCittadino",
-                "ServletRicercaCittadino",
-                "ServletStatoDiFamiglia"
-            ],
-            "llm_classes": [
-                "Citizen",
-                "ControllerFiles",
-                "ServletLogin"
-            ]
-        },
-        {
-            "file_name": "EA7.txt",
-            "expected_classes": [
-                "AccessManager",
-                "Accesso",
-                "AdminManager",
-                "DbAccesso",
-                "DbConnection",
-                "DbException",
-                "DbImpiegato",
-                "Impiegato",
-                "ImpiegatoManager",
-                "ServletAnnulla",
-                "ServletInserisciImpiegato"
-            ],
-            "llm_classes": [
-                "ControllerFiles",
-                "DbException",
-                "ServletInsertEmployee",
-                "ServletLogin"
-            ]
-        },
-        {
-            "file_name": "EA8.txt",
-            "expected_classes": [
-                "AccessManager",
-                "Accesso",
-                "AdminManager",
-                "Amministratore",
-                "DbAccesso",
-                "DbAmministratore",
-                "DbConnection",
-                "DbException",
-                "ServletAnnulla",
-                "ServletLogout",
-                "ServletMostraAccesso"
-            ],
-            "llm_classes": [
-                "Administrator",
-                "ServletLogin"
-            ]
-        },
-        {
-            "file_name": "EA9.txt",
-            "expected_classes": [
-                "AccessManager",
-                "Accesso",
-                "AdminManager",
-                "CIManager",
-                "CartaIdentita",
-                "Cittadino",
-                "CittadinoManager",
-                "DbAccesso",
-                "DbCartaIdentita",
-                "DbCittadino",
-                "DbComune",
-                "DbConnection",
-                "ServletAnnulla",
-                "ServletLogout",
-                "ServletMostraAccessoA"
-            ],
-            "llm_classes": [
-                "ServletLogout"
-            ]
-        },
-        {
-            "file_name": "EA10.txt",
-            "expected_classes": [
-                "AccessManager",
-                "Accesso",
-                "AdminManager",
-                "DbAccesso",
-                "DbImpiegato",
-                "Impiegato",
-                "ImpiegatoManager",
-                "ServletAnnulla",
-                "ServletLogout",
-                "ServletMostraAccesso"
-            ],
-            "llm_classes": [
-                "ServletLogin"
+                "ElectricCar",
+                "Entry",
+                "Exit"
             ]
         }
     ],
     {
-        "precision": 0.2727272727272727,
-        "recall": 0.04580152671755725,
-        "f1": 0.0784313725490196
+        "precision": 0.5333333333333333,
+        "recall": 0.36363636363636365,
+        "f1": 0.43243243243243246
     }
 ]

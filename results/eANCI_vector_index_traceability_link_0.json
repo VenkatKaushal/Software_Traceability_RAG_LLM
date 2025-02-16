@@ -1,34 +1,17 @@
 {
     "EA1.txt": [
-        "Administrator"
+        "Entry"
     ],
     "EA2.txt": [
-        "ServletLogin"
+        "Exit"
     ],
     "EA3.txt": [
-        "ServletLogin"
+        "Vehicle"
     ],
     "EA4.txt": [
-        "ServletCancel"
+        "Entry"
     ],
     "EA5.txt": [
-        "ServletCancel"
-    ],
-    "EA6.txt": [
-        "Citizen"
-    ],
-    "EA7.txt": [
-        "ServletInsertEmployee",
-        "EmployeeDao",
-        "EmployeeEntity"
-    ],
-    "EA8.txt": [
-        "Administrator"
-    ],
-    "EA9.txt": [
-        "ServletLogout"
-    ],
-    "EA10.txt": [
-        "ServletDeleteEmployee"
+        "ElectricCar"
     ]
 }

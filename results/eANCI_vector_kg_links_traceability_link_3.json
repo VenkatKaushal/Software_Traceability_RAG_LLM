@@ -1,44 +1,27 @@
 {
     "EA1.txt": [
-        "Administrator",
-        "DbException",
-        "ServletLogin"
+        "Management",
+        "Entry",
+        "User",
+        "Vehicle",
+        "Exit"
     ],
     "EA2.txt": [
-        "DbException",
-        "ServletLogin"
+        "Entry",
+        "Exit"
     ],
     "EA3.txt": [
-        "ServletLogin"
+        "Entry",
+        "Exit",
+        "Vehicle"
     ],
     "EA4.txt": [
-        "ServletCancel",
-        "ServletLogin"
+        "PaymentOptions",
+        "Entry"
     ],
     "EA5.txt": [
-        "ControllerFiles",
-        "ServletCancel",
-        "ServletLogin"
-    ],
-    "EA6.txt": [
-        "ControllerFiles",
-        "Citizen",
-        "ServletLogin"
-    ],
-    "EA7.txt": [
-        "ServletInsertEmployee",
-        "ControllerFiles",
-        "DbException",
-        "ServletLogin"
-    ],
-    "EA8.txt": [
-        "ServletLogin",
-        "Administrator"
-    ],
-    "EA9.txt": [
-        "ServletLogout"
-    ],
-    "EA10.txt": [
-        "ServletLogin"
+        "Entry",
+        "Exit",
+        "ElectricCar"
     ]
 }
