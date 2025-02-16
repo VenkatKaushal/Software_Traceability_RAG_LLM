@@ -1,29 +1,3 @@
-
-"""
-This script defines functions for querying documents in parallel and sequentially using custom query engines and retrievers. It also includes a function to create a fusion query engine that combines results from multiple retrievers. These queries can be executed in parallel using multiple threads to improve efficiency.
-
-Functions:
-
-1. get_fusion_qe:
-   - Creates a Fusion Query Engine by initializing a `FusionRetriever` with a list of retrievers and additional parameters. It then creates a response synthesizer using `get_response_synthesizer` and returns a `RetrieverQueryEngine` that utilizes both the retriever and the response synthesizer.
-
-2. query_parallel:
-   - Executes queries in parallel using a `ThreadPoolExecutor` with multiple threads. It takes a query engine, a query template, a list of requirement nodes, and the number of threads to use. It returns a dictionary of results mapped to the respective file names.
-
-3. query_sequential:
-   - Executes queries sequentially (one after another) for each requirement node. It returns the results in a dictionary, mapping the file names to the query results.
-
-4. custom_query_engine:
-   - Creates a custom query engine using a `CustomRetriever` that combines a vector retriever and a knowledge graph retriever. It returns a `RetrieverQueryEngine` with a response synthesizer.
-
-Dependencies:
-- concurrent.futures: For parallel query execution using `ThreadPoolExecutor`.
-- llama_index: Provides classes for document nodes, query engines, and retrievers.
-- tqdm.auto: For progress tracking during querying.
-- tqdm.asyncio: For asynchronous progress bars.
-"""
-
-
 from concurrent.futures import ThreadPoolExecutor
 from llama_index.core import Document, Settings
 from tqdm.auto import tqdm

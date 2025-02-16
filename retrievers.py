@@ -1,40 +1,3 @@
-"""
-This script defines custom retrievers and query handling for a multi-retriever framework, as well as the logic for running multiple queries in parallel. It includes functionalities for fusing results from different retrieval sources, generating additional queries, and retrieving data in parallel to improve efficiency.
-
-Classes:
-
-1. FusionRetriever:
-   - An ensemble retriever that combines multiple retrievers' results using a fusion mechanism. It generates multiple queries, runs them against the retrievers in parallel, and then fuses the results to produce a final list of nodes.
-
-2. CustomRetriever:
-   - A custom retriever that performs both vector search and knowledge graph search. It retrieves nodes from both sources (vector and knowledge graph) and combines them based on a mode ("AND" or "OR").
-
-Functions:
-
-1. generate_queries:
-   - Generates a set of queries from a given input query string by formatting it with a prompt template and running it through an LLM (Large Language Model).
-
-2. fuse_results:
-   - Fuses results from multiple retrievers by re-ranking them based on their score and rank. It uses a combination of scores to decide the final ranking and returns the top results based on a given similarity threshold.
-
-3. run_queries:
-   - Runs a list of queries asynchronously across multiple retrievers using a `ThreadPoolExecutor` for parallel processing. It gathers the results and organizes them by query.
-
-4. get_reachable_nodes:
-   - Retrieves nodes that are reachable from a given source node in a graph within a specified distance, using the single-source shortest path length.
-
-5. retrieve_parallel:
-   - A function that retrieves nodes in parallel for multiple requirements. It uses `ThreadPoolExecutor` to parallelize the retrieval process across multiple threads and tracks progress with a progress bar.
-
-Dependencies:
-- networkx: Used for graph-based operations.
-- llama_index: Provides base classes and functionality for retrieval systems, query handling, and indexing.
-- tqdm.asyncio: For asynchronous progress bars.
-- asyncio: For handling asynchronous operations.
-"""
-
-
-
 from concurrent.futures import ThreadPoolExecutor
 import networkx as nx
 from llama_index.core import QueryBundle
@@ -46,6 +9,7 @@ from llama_index.core.retrievers import (
     KGTableRetriever,
     KnowledgeGraphRAGRetriever
 )
+import re
 
 from llama_index.core.indices.keyword_table import KeywordTableGPTRetriever
 
@@ -57,6 +21,39 @@ import asyncio
 
 from indexing.constants import CLASS_NAME_LABEL
 from prompts.templates import SCENARIO_GEN_TEMPLATE
+
+
+class GraphRetriever(BaseRetriever):
+    def __init__(self, graph, req_nodes, top_k=5):
+        """
+        graph: nx.Graph representing requirement relationships.
+        req_nodes: list of Document nodes (requirements).
+        top_k: number of neighbors to consider per matched node.
+        """
+       
+        self.req_nodes = {node.metadata["file_name"]: node for node in req_nodes}
+        self.graph = graph
+        self.top_k = top_k
+
+    def _retrieve(self, query: str):
+        
+        matched = []
+        for file_name, node in self.req_nodes.items():
+            if query.lower() in node.text.lower():
+                matched.append(file_name)
+
+       
+        expanded = set(matched)
+        for file_name in matched:
+            
+            neighbors = list(self.graph.neighbors(file_name))
+            expanded.update(neighbors[:self.top_k])
+        
+        return [self.req_nodes[name] for name in expanded if name in self.req_nodes]
+
+
+
+
 
 
 class FusionRetriever(BaseRetriever):
@@ -144,7 +141,18 @@ def generate_queries(
         num_queries=num_queries - 1, query=query_str
     )
     response = llm.complete(fmt_prompt)
-    queries = response.text.split("\n")
+    # queries = response.text.split("\n")
+    pattern = r"Queries:\s*((?:\d*\.\s*|)([^?]+(?:\?|$))+)"
+    matches = re.findall(pattern, str(response))
+
+    
+    queries = []
+    for match in matches:
+        extracted_queries = re.findall(r"(?:\d*\.\s*|)([^?]+(?:\?|$))", match[0])  
+        queries.extend(extracted_queries)
+
+    for query in queries:
+        print(query)
     return queries
 
 
