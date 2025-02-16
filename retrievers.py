@@ -1,13 +1,8 @@
 from concurrent.futures import ThreadPoolExecutor
 import networkx as nx
-# import QueryBundle
 from llama_index.core import QueryBundle
-
-# import NodeWithScore
 from llama_index.core.schema import NodeWithScore
 from tqdm.asyncio import tqdm
-
-# Retrievers
 from llama_index.core.retrievers import (
     BaseRetriever,
     VectorIndexRetriever,
@@ -118,11 +113,11 @@ def generate_queries(
 
 def fuse_results(results_dict, similarity_top_k: int = 2):
     """Fuse results."""
-    k = 60.0  # `k` is a parameter used to control the impact of outlier rankings.
+    k = 60.0 
     fused_scores = {}
     text_to_node = {}
 
-    # compute reciprocal rank scores
+    
     for nodes_with_scores in results_dict.values():
         for rank, node_with_score in enumerate(
             sorted(
@@ -135,12 +130,12 @@ def fuse_results(results_dict, similarity_top_k: int = 2):
                 fused_scores[text] = 0.0
             fused_scores[text] += 1.0 / (rank + k)
 
-    # sort results
+    
     reranked_results = dict(
         sorted(fused_scores.items(), key=lambda x: x[1], reverse=True)
     )
 
-    # adjust node scores
+    
     reranked_nodes: List[NodeWithScore] = []
     for text, score in reranked_results.items():
         reranked_nodes.append(text_to_node[text])

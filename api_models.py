@@ -7,13 +7,15 @@ import asyncio
 from llama_index.core.llms import ChatMessage, ChatResponse, CompletionResponse
 from llama_index.core.base.llms.types import LLMMetadata, TextBlock
 from llama_index.core.llms import LLM
-
-# For HuggingFace models
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 from huggingface_hub import login
 from llama_index.core import Settings
 from llama_index.core.prompts.base import BasePromptTemplate
+from transformers import RobertaForQuestionAnswering
+import os
+model = "mistralai/Mixtral-8x22B-Instruct-v0.1"
+token = os.getenv("HUGGINGFACE_TOKEN")
 
 def set_embed_model(model_name: str = None) -> None:
     from llama_index.embeddings.huggingface import HuggingFaceEmbedding
@@ -24,12 +26,14 @@ def set_embed_model(model_name: str = None) -> None:
 def set_llm(llm_type: str = None, model_name: str = None, api_key=None) -> None:
     """
     Set the LLM based on a simple string key. This configuration requires no API keys.
-    Acceptable llm_type values (case-insensitive): "deepseek", "llama2", "mistral".
+    Acceptable llm_type values (case-insensitive): "deepseek", "llama2", "mistral, google/gemma-2-2b microsoft/graphcodebert-base
     """
-    if llm_type == "google/gemma-2-2b":
-        llm = GemmaLLM(device="cpu")
-    else:
-        raise ValueError(f"Unsupported LLM type: {llm_type}")
+    # if llm_type == "microsoft/graphcodebert-base":
+    #     llm = GemmaLLM(device="cpu")
+    # else:
+    #     raise ValueError(f"Unsupported LLM type: {llm_type}")
+    # Settings.llm = llm
+    llm = LLM(device="cpu")
     Settings.llm = llm
 
 def set_llm_and_embed(
@@ -47,28 +51,28 @@ def set_llm_and_embed(
     else:
         set_embed_model()
 
-class GemmaLLM(LLM):
+class LLM(LLM):
     """
     DeepSeekLLM loads an open-source DeepSeek model from HuggingFace.
     No API keys are required.
     """
-    model_name: str = Field(default="google/gemma-2-2b", description="Model name for DeepSeek")
+    model_name: str = Field(default=model, description="Model name for DeepSeek")
     max_new_tokens: int = Field(default=256, description="Maximum tokens to generate")
     temperature: float = Field(default=0.7, description="Sampling temperature")
     tokenizer: AutoTokenizer = None
     model: AutoModelForCausalLM = None
-    device: str = "cpu" # Default to CPU
+    device: str = "cpu" 
 
     def __init__(self, model_name: str = None, max_new_tokens: int = None, temperature: float = None, device: str = None):
         super().__init__()
-        self.model_name = model_name or "google/gemma-2-2b"
+        self.model_name = model_name or model
         self.max_new_tokens = max_new_tokens or 256
         self.temperature = temperature or 0.7
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
 
-        # ✅ Load tokenizer and model
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_name).to(self.device)
+       
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_auth_token=token)
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_name, use_auth_token=token).to(self.device)
 
     @property
     def metadata(self) -> LLMMetadata:
@@ -94,10 +98,10 @@ class GemmaLLM(LLM):
         print("------------------------------------prompt started------------------------------------") 
         print("prompt: ", formatted_prompt)
         print("------------------------------------prompt ended------------------------------------")  
-        # print("outputs")     
+             
         outputs = self.model.generate(
             **inputs,
-            max_new_tokens=4000, #self.max_new_tokens,
+            max_new_tokens=4000, 
             do_sample=True,
             temperature=self.temperature,
         ).to(self.device)
@@ -105,7 +109,6 @@ class GemmaLLM(LLM):
         print("------------------------------------prompt answer started------------------------------------") 
         print("generated_text: ", generated_text)
         print("------------------------------------prompt answer ended------------------------------------") 
-        # print("generated text")
         return generated_text
 
     def stream_chat(self, messages: Sequence[ChatMessage], **kwargs: Any) -> Generator[ChatResponse, None, None]:

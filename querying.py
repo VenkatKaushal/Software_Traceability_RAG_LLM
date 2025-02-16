@@ -5,13 +5,9 @@ from llama_index.core.response_synthesizers import get_response_synthesizer
 from typing import List, Union
 from llama_index.core.query_engine import BaseQueryEngine
 from retrievers import CustomRetriever
-
 from typing import List, Dict, Any
 from tqdm.asyncio import tqdm
 from llama_index.core.query_engine import RetrieverQueryEngine
-
-
-# Retrievers
 from llama_index.core.retrievers import (
     VectorIndexRetriever,
     KGTableRetriever,
@@ -20,9 +16,6 @@ from llama_index.core.retrievers import (
 from llama_index.core.indices.keyword_table import KeywordTableGPTRetriever
 
 from typing import List
-
-# get retrievers
-
 from prompts.templates import SCENARIO_GEN_TEMPLATE
 from retrievers import FusionRetriever
 

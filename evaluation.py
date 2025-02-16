@@ -26,6 +26,7 @@ from llama_index.core.evaluation import (
 
 from indexing.utils import run_pipeline_multithreaded, get_transformations
 from prompts.templates import REQ2CODE_QA_TEMPLATE
+import requests
 
 QUESTIONS_CHUNKS_SIZE = 50
 
@@ -39,9 +40,9 @@ class QADataset(BaseModel):
 
     """
 
-    queries: Dict[str, str]  # dict id -> query
-    corpus: Dict[str, str]  # dict id -> string
-    relevant_docs: Dict[str, List[str]]  # query id -> list of doc ids
+    queries: Dict[str, str] 
+    corpus: Dict[str, str]  #
+    relevant_docs: Dict[str, List[str]] 
     mode: str = "text"
 
     @property
@@ -109,27 +110,156 @@ def generate_qa_dataset(
 
 
 
-def get_post_processing_results(req_results: Dict):
-    ok = True
-    llm_results = defaultdict(set)
-    for file_name, result in req_results.items():
-        try:
-            class_names_list = json.loads(result.response)
-            for class_name in class_names_list:
-                llm_results[file_name].add(class_name)
-        except Exception as e:
-            print(file_name, result.response)
-            ok = False
+# def get_post_processing_results(req_results: Dict):
+#     ok = True
+#     llm_results = defaultdict(set)
+#     for file_name, result in req_results.items():
+#         try:
+#             class_names_list = json.loads(result.response)
+#             for class_name in class_names_list:
+#                 llm_results[file_name].add(class_name)
+#         except Exception as e:
+#             print(file_name, result.response)
+#             ok = False
 
-    for k, value in llm_results.items():
-        llm_results[k] = list(value)
+#     for k, value in llm_results.items():
+#         llm_results[k] = list(value)
     
-    if not ok:
-        print("Some results are invalid")
-    else:
-        print("All results are valid")
+#     if not ok:
+#         print("Some results are invalid")
+#     else:
+#         print("All results are valid")
 
-    return llm_results
+#     return llm_results
+
+
+# def get_post_processing_results(req_results: Dict) -> Dict[str, List[str]]:
+#     GEMINI_API_KEY = "AIzaSyBJ7OItfQQiFbCHb5_EjuOgag5a78p-TSw"
+#     GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+    
+    
+#     req_results_str = str(req_results)
+
+#     input_text = f"""
+#     Extract the EA file names and their corresponding class names from the following text.
+#     Do not write code. I want a valid JSON as the output. I should be JSON readable output. Do not write in between```json ```.Just JSON output only.
+#     Return the output as a valid JSON dictionary, where:
+#     - The keys are EA file names (e.g., "EA1.txt", "EA2.txt").
+#     - The values are lists of class names extracted after "<<ANSWER>>".
+
+#     Input Text:
+#     ---
+#     ${req_results_str}
+#     ---
+#     """
+
+#     print(input_text)
+#     headers = {"Content-Type": "application/json"}
+#     data = {
+#         "contents": [{"parts": [{"text": input_text}]}]
+#     }
+#     response = requests.post(GEMINI_API_URL, headers=headers, json=data)
+#     if response.status_code == 200:
+#         result = response.json()
+#         generated_text = result["candidates"][0]["content"]["parts"][0]["text"]
+#         print("Extracted JSON Output:\n", generated_text)
+
+#         try:
+#             parsed_json = json.loads(generated_text)  # Parse JSON properly
+#         except json.JSONDecodeError as e:
+#             print(f"JSON Decode Error: {e}")
+#             parsed_json = {}
+
+#         # Convert to defaultdict(set)
+#         llm_results = defaultdict(set)
+#         for key, values in parsed_json.items():
+#             llm_results[key] = set(values) 
+
+#     else:
+#         print(f"Error: {response.status_code}, {response.text}")
+#         llm_results = defaultdict(set)
+    
+#     for k, value in llm_results.items():
+#         llm_results[k] = list(value)
+
+
+#     return llm_results
+
+
+# def get_post_processing_results(req_results: Dict) -> Dict[str, List[str]]:
+#     req_results = f"""
+#     {req_results} 
+#     """
+
+#     print(req_results)
+#     filenames = re.findall(r"'?(EA\d+\.txt)'?", req_results)
+#     print(filenames)
+#     file_sections = re.split(r"'?(EA\d+\.txt)'?", req_results)[1:]
+#     filename_class_map = {}
+    
+#     for i in range(0, len(file_sections), 2):
+#         filename = file_sections[i].strip()
+#         section = file_sections[i + 1] if i + 1 < len(file_sections) else ""
+        
+#         # Extract class names between the filename and next filename or end of text
+#         classnames = re.findall(r"<<ANSWER>>\s*(\[.*?\])", section, re.DOTALL)
+#         print(classnames)
+#         filename_class_map[filename] = classnames[0] if classnames else []
+    
+#     parsed_json = filename_class_map
+
+#     # Convert to defaultdict(set)
+#     llm_results = defaultdict(set)
+#     for key, values in parsed_json.items():
+#         llm_results[key] = set(values) 
+
+    
+#     for k, value in llm_results.items():
+#         llm_results[k] = list(value)
+
+
+#     return llm_results
+
+def get_post_processing_results(req_results: Dict) -> Dict[str, List[str]]:
+    req_results = f"""
+    {req_results} 
+    """
+
+    print("Raw Input:\n", req_results)
+    
+    filenames = re.findall(r"'?(EA\d+\.txt)'?", req_results)
+    print("Extracted Filenames:", filenames)
+    
+    file_sections = re.split(r"'?(EA\d+\.txt)'?", req_results)[1:]
+    filename_class_map = {}
+    
+    for i in range(0, len(file_sections), 2):
+        filename = file_sections[i].strip()
+        section = file_sections[i + 1] if i + 1 < len(file_sections) else ""
+        
+       
+        classnames_match = re.findall(r"<<ANSWER>>.*?\[([^\]]+)\]", section, re.DOTALL)
+        
+        if classnames_match:
+            try:
+                classnames = [name.strip().strip('"') for name in classnames_match[0].split(',')]
+            except json.JSONDecodeError:
+                classnames = []
+        else:
+            classnames = []
+        
+        print(f"Extracted classes for {filename}:", classnames)
+        filename_class_map[filename] = list(set(classnames))
+
+    return filename_class_map
+
+
+if __name__ == '__main__':
+    response_text = """
+    ${'EA1.txt': Response(response='<<INSTRUCTIONS>>\nContext information is below:\n---------------------\nClass Name: Entry\n\nMethod Name: PrePayment\nSignature: Entry.PrePayment(long,Vehicle)\nClass Name: Entry\n---------------------\nUsing ONLY this context (no prior knowledge), answer:\n\nWhat are the names of the classes that are related to the following use case requirement?\nA user arrives at the parking facility and selects the entry gate. The system verifies if the fee has been prepaid or requires payment. The user is assigned a parking slot based on vehicle type.\n\nProvide the answer in a list format and provide ONLY the list of class names as a JSON list.\n[<"Class 1 Name">, <"Class 2 Name">, ... <"Class N Name">] where N can be up to 10.\n\n\nDo NOT repeat these instructions.\n<<ANSWER>>\n["Entry", "Car"]', source_nodes=[NodeWithScore(node=TextNode(id_='256e4708-602c-47bc-be37-6dbf25df116e', embedding=None, metadata={'File Name': 'Entry.java', 'Class Name': 'Entry', 'methods': "[{'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'CheckPayment', 'type': 'Method', 'Signature': 'Entry.CheckPayment(Vehicle,int)', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.CheckPayment(Vehicle,int)']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PaymentOptions', 'type': 'Method', 'Signature': 'Entry.PaymentOptions()', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.PaymentOptions()']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PrePayment', 'type': 'Method', 'Signature': 'Entry.PrePayment(long,Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'AssignInTime', 'type': 'Method', 'Signature': 'Entry.AssignInTime(Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}]", 'method_calls': '{}'}, excluded_embed_metadata_keys=['File Name', 'method_calls', 'methods'], excluded_llm_metadata_keys=['File Name', 'method_calls', 'methods'], relationships={<NodeRelationship.SOURCE: '1'>: RelatedNodeInfo(node_id='fa2ba0e5-e6d3-426e-bfda-157df00ec18d', node_type='4', metadata={'File Name': 'Entry.java', 'Class Name': 'Entry', 'methods': "[{'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'CheckPayment', 'type': 'Method', 'Signature': 'Entry.CheckPayment(Vehicle,int)', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.CheckPayment(Vehicle,int)']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PaymentOptions', 'type': 'Method', 'Signature': 'Entry.PaymentOptions()', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.PaymentOptions()']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PrePayment', 'type': 'Method', 'Signature': 'Entry.PrePayment(long,Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'AssignInTime', 'type': 'Method', 'Signature': 'Entry.AssignInTime(Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}]", 'method_calls': '{}'}, hash='74aad1777bb649d2ec02ac7afdd5233bcc133e6223966d3a382612af87e9ec44'), <NodeRelationship.PREVIOUS: '2'>: RelatedNodeInfo(node_id='f198f4ff-c0bb-486a-84e9-bfc69807b697', node_type='1', metadata={'File Name': 'Entry.java', 'Class Name': 'Entry', 'methods': "[{'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'CheckPayment', 'type': 'Method', 'Signature': 'Entry.CheckPayment(Vehicle,int)', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.CheckPayment(Vehicle,int)']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PaymentOptions', 'type': 'Method', 'Signature': 'Entry.PaymentOptions()', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.PaymentOptions()']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PrePayment', 'type': 'Method', 'Signature': 'Entry.PrePayment(long,Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'AssignInTime', 'type': 'Method', 'Signature': 'Entry.AssignInTime(Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}]", 'method_calls': '{}'}, hash='756fd072cb282313b9ef021b460be2b9723ce2951b4d3600d740a4630c5b6d11'), <NodeRelationship.NEXT: '3'>: RelatedNodeInfo(node_id='d36d0a01-1885-4c31-a77e-a76861e535ba', node_type='1', metadata={}, hash='ea6270365996bec008a2bc3c8fbacab61de1c04ab2f3d05d6cf15f5a328abbad')}, metadata_template='{key}: {value}', metadata_separator='\n', text='Method Name: PrePayment\nSignature: Entry.PrePayment(long,Vehicle)\nClass Name: Entry', mimetype='text/plain', start_char_idx=205, end_char_idx=288, metadata_seperator='\n', text_template='{metadata_str}\n\n{content}'), score=0.5278371590289807)], metadata={'256e4708-602c-47bc-be37-6dbf25df116e': {'File Name': 'Entry.java', 'Class Name': 'Entry', 'methods': "[{'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'CheckPayment', 'type': 'Method', 'Signature': 'Entry.CheckPayment(Vehicle,int)', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.CheckPayment(Vehicle,int)']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PaymentOptions', 'type': 'Method', 'Signature': 'Entry.PaymentOptions()', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.PaymentOptions()']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PrePayment', 'type': 'Method', 'Signature': 'Entry.PrePayment(long,Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'AssignInTime', 'type': 'Method', 'Signature': 'Entry.AssignInTime(Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}]", 'method_calls': '{}'}}), 'EA2.txt': Response(response='<<INSTRUCTIONS>>\nContext information is below:\n---------------------\nClass Name: Exit\n\nClass Name: Exit\n\n\n\nMethods: \n\nMethod Name: CheckPayment\nSignature: Exit.CheckPayment(Vehicle,int)\nClass Name: Exit\n---------------------\nUsing ONLY this context (no prior knowledge), answer:\n\nWhat are the names of the classes that are related to the following use case requirement?\nThe user proceeds to an exit gate where the system verifies parking duration and generates a bill. Any outstanding fees must be settled before exit approval is granted.\n\nProvide the answer in a list format and provide ONLY the list of class names as a JSON list.\n[<"Class 1 Name">, <"Class 2 Name">, ... <"Class N Name">] where N can be up to 10.\n\n\nDo NOT repeat these instructions.\n<<ANSWER>>\n["Exit"]', source_nodes=[NodeWithScore(node=TextNode(id_='135622ab-8022-4014-aae7-aaf1c0052d8b', embedding=None, metadata={'File Name': 'Exit.java', 'Class Name': 'Exit', 'methods': "[{'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'CheckPayment', 'type': 'Method', 'Signature': 'Exit.CheckPayment(Vehicle,int)', 'Method Docstring': None, 'called_by': ['Entries_Exits.CheckPayment(Vehicle,int)'], 'calls': ['Exit.GenerateBill(long,int)']}, {'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'AssignOutTime', 'type': 'Method', 'Signature': 'Exit.AssignOutTime(Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'PaymentOptions', 'type': 'Method', 'Signature': 'Exit.PaymentOptions()', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.PaymentOptions()']}, {'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'GenerateBill', 'type': 'Method', 'Signature': 'Exit.GenerateBill(long,int)', 'Method Docstring': None, 'called_by': ['Exit.CheckPayment(Vehicle,int)'], 'calls': []}]", 'method_calls': '{}'}, excluded_embed_metadata_keys=['File Name', 'method_calls', 'methods'], excluded_llm_metadata_keys=['File Name', 'method_calls', 'methods'], relationships={<NodeRelationship.SOURCE: '1'>: RelatedNodeInfo(node_id='056892bf-d691-40ab-ab57-3fbd7bc0d766', node_type='4', metadata={'File Name': 'Exit.java', 'Class Name': 'Exit', 'methods': "[{'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'CheckPayment', 'type': 'Method', 'Signature': 'Exit.CheckPayment(Vehicle,int)', 'Method Docstring': None, 'called_by': ['Entries_Exits.CheckPayment(Vehicle,int)'], 'calls': ['Exit.GenerateBill(long,int)']}, {'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'AssignOutTime', 'type': 'Method', 'Signature': 'Exit.AssignOutTime(Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'PaymentOptions', 'type': 'Method', 'Signature': 'Exit.PaymentOptions()', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.PaymentOptions()']}, {'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'GenerateBill', 'type': 'Method', 'Signature': 'Exit.GenerateBill(long,int)', 'Method Docstring': None, 'called_by': ['Exit.CheckPayment(Vehicle,int)'], 'calls': []}]", 'method_calls': '{}'}, hash='99122077f214a0d8bbc07821b907315ffd625accefb271c1971b02fadc44c2cf'), <NodeRelationship.NEXT: '3'>: RelatedNodeInfo(node_id='97a951b7-3389-4116-a85d-da28af033be6', node_type='1', metadata={}, hash='5a0201fe3c374d3e979c0c53e5aafe0826084cb2297536c84b02f9e3f2007844')}, metadata_template='{key}: {value}', metadata_separator='\n', text='Class Name: Exit\n\n\n\nMethods: \n\nMethod Name: CheckPayment\nSignature: Exit.CheckPayment(Vehicle,int)\nClass Name: Exit', mimetype='text/plain', start_char_idx=0, end_char_idx=115, metadata_seperator='\n', text_template='{metadata_str}\n\n{content}'), score=0.5136607664233149)], metadata={'135622ab-8022-4014-aae7-aaf1c0052d8b': {'File Name': 'Exit.java', 'Class Name': 'Exit', 'methods': "[{'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'CheckPayment', 'type': 'Method', 'Signature': 'Exit.CheckPayment(Vehicle,int)', 'Method Docstring': None, 'called_by': ['Entries_Exits.CheckPayment(Vehicle,int)'], 'calls': ['Exit.GenerateBill(long,int)']}, {'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'AssignOutTime', 'type': 'Method', 'Signature': 'Exit.AssignOutTime(Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'PaymentOptions', 'type': 'Method', 'Signature': 'Exit.PaymentOptions()', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.PaymentOptions()']}, {'Class Name': 'Exit', 'File Name': 'Exit.java', 'Method Name': 'GenerateBill', 'type': 'Method', 'Signature': 'Exit.GenerateBill(long,int)', 'Method Docstring': None, 'called_by': ['Exit.CheckPayment(Vehicle,int)'], 'calls': []}]", 'method_calls': '{}'}}), 'EA3.txt': Response(response='<<INSTRUCTIONS>>\nContext information is below:\n---------------------\nClass Name: Vehicle\n\nClass Name: Vehicle\nAttributes: \nVehicleSpace: int\nAllocatedParkingLot: int\nInTime: long\nOutTime: long\nBillPayed: long\n---------------------\nUsing ONLY this context (no prior knowledge), answer:\n\nWhat are the names of the classes that are related to the following use case requirement?\nThe system dynamically assigns available slots based on vehicle type, ensuring proper space utilization. If no suitable slot is available, the user is prompted to wait or choose another floor.\n\nProvide the answer in a list format and provide ONLY the list of class names as a JSON list.\n[<"Class 1 Name">, <"Class 2 Name">, ... <"Class N Name">] where N can be up to 10.\n\n\nDo NOT repeat these instructions.\n<<ANSWER>>\n["Vehicle"]', source_nodes=[NodeWithScore(node=TextNode(id_='3b9137b9-b627-450a-87f4-b97d09a6138c', embedding=None, metadata={'File Name': 'Vehicle.java', 'Class Name': 'Vehicle', 'methods': "[{'Class Name': 'Vehicle', 'File Name': 'Vehicle.java', 'Method Name': 'PayFee', 'type': 'Method', 'Signature': 'Vehicle.PayFee()', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Vehicle', 'File Name': 'Vehicle.java', 'Method Name': 'getVehicleSpace', 'type': 'Method', 'Signature': 'Vehicle.getVehicleSpace()', 'Method Docstring': None}, {'Class Name': 'Vehicle', 'File Name': 'Vehicle.java', 'Method Name': 'ChargeVehicle', 'type': 'Method', 'Signature': 'Vehicle.ChargeVehicle(int,int)', 'Method Docstring': None}]", 'method_calls': '{}'}, excluded_embed_metadata_keys=['File Name', 'method_calls', 'methods'], excluded_llm_metadata_keys=['File Name', 'method_calls', 'methods'], relationships={<NodeRelationship.SOURCE: '1'>: RelatedNodeInfo(node_id='93049123-dc44-4f51-92d8-ecfdfbd0e1b1', node_type='4', metadata={'File Name': 'Vehicle.java', 'Class Name': 'Vehicle', 'methods': "[{'Class Name': 'Vehicle', 'File Name': 'Vehicle.java', 'Method Name': 'PayFee', 'type': 'Method', 'Signature': 'Vehicle.PayFee()', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Vehicle', 'File Name': 'Vehicle.java', 'Method Name': 'getVehicleSpace', 'type': 'Method', 'Signature': 'Vehicle.getVehicleSpace()', 'Method Docstring': None}, {'Class Name': 'Vehicle', 'File Name': 'Vehicle.java', 'Method Name': 'ChargeVehicle', 'type': 'Method', 'Signature': 'Vehicle.ChargeVehicle(int,int)', 'Method Docstring': None}]", 'method_calls': '{}'}, hash='3927ee401463d4b500e8c83a0bb32a4e517c3326c7c4591c0dcb5fb7e0aa44d8'), <NodeRelationship.NEXT: '3'>: RelatedNodeInfo(node_id='ac04948e-2258-4ec7-8bec-51153cc48c7e', node_type='1', metadata={}, hash='bafc27fe11bef8ee8cf8bc0b582388ce8471a38c00526e2d6b6f2f59482b78cf')}, metadata_template='{key}: {value}', metadata_separator='\n', text='Class Name: Vehicle\nAttributes: \nVehicleSpace: int\nAllocatedParkingLot: int\nInTime: long\nOutTime: long\nBillPayed: long', mimetype='text/plain', start_char_idx=0, end_char_idx=118, metadata_seperator='\n', text_template='{metadata_str}\n\n{content}'), score=0.46649064818957264)], metadata={'3b9137b9-b627-450a-87f4-b97d09a6138c': {'File Name': 'Vehicle.java', 'Class Name': 'Vehicle', 'methods': "[{'Class Name': 'Vehicle', 'File Name': 'Vehicle.java', 'Method Name': 'PayFee', 'type': 'Method', 'Signature': 'Vehicle.PayFee()', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Vehicle', 'File Name': 'Vehicle.java', 'Method Name': 'getVehicleSpace', 'type': 'Method', 'Signature': 'Vehicle.getVehicleSpace()', 'Method Docstring': None}, {'Class Name': 'Vehicle', 'File Name': 'Vehicle.java', 'Method Name': 'ChargeVehicle', 'type': 'Method', 'Signature': 'Vehicle.ChargeVehicle(int,int)', 'Method Docstring': None}]", 'method_calls': '{}'}}), 'EA4.txt': Response(response='<<INSTRUCTIONS>>\nContext information is below:\n---------------------\nClass Name: Entry\n\nMethod Name: PrePayment\nSignature: Entry.PrePayment(long,Vehicle)\nClass Name: Entry\n---------------------\nUsing ONLY this context (no prior knowledge), answer:\n\nWhat are the names of the classes that are related to the following use case requirement?\nUsers can prepay for parking or pay upon exit using different payment methods (card, attendant, or portal). The system maintains a record of payments and balances.\n\nProvide the answer in a list format and provide ONLY the list of class names as a JSON list.\n[<"Class 1 Name">, <"Class 2 Name">, ... <"Class N Name">] where N can be up to 10.\n\n\nDo NOT repeat these instructions.\n<<ANSWER>>\n["Entry"]\n\nThe context only provides the information about the Entry class and its method \'PrePayment\'. It does not mention any other class that might be related to handling different payment methods or maintaining records of payments and balances. Therefore, based on the given context, only the Entry class can be identified as related to the use case requirement.', source_nodes=[NodeWithScore(node=TextNode(id_='af1a6316-7e33-44c1-9be9-85c69ed82115', embedding=None, metadata={'File Name': 'Entry.java', 'Class Name': 'Entry', 'methods': "[{'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'CheckPayment', 'type': 'Method', 'Signature': 'Entry.CheckPayment(Vehicle,int)', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.CheckPayment(Vehicle,int)']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PaymentOptions', 'type': 'Method', 'Signature': 'Entry.PaymentOptions()', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.PaymentOptions()']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PrePayment', 'type': 'Method', 'Signature': 'Entry.PrePayment(long,Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'AssignInTime', 'type': 'Method', 'Signature': 'Entry.AssignInTime(Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}]", 'method_calls': '{}'}, excluded_embed_metadata_keys=['File Name', 'method_calls', 'methods'], excluded_llm_metadata_keys=['File Name', 'method_calls', 'methods'], relationships={<NodeRelationship.SOURCE: '1'>: RelatedNodeInfo(node_id='44d3a08b-935d-4ec1-bc1e-744bb74eea54', node_type='4', metadata={'File Name': 'Entry.java', 'Class Name': 'Entry', 'methods': "[{'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'CheckPayment', 'type': 'Method', 'Signature': 'Entry.CheckPayment(Vehicle,int)', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.CheckPayment(Vehicle,int)']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PaymentOptions', 'type': 'Method', 'Signature': 'Entry.PaymentOptions()', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.PaymentOptions()']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PrePayment', 'type': 'Method', 'Signature': 'Entry.PrePayment(long,Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'AssignInTime', 'type': 'Method', 'Signature': 'Entry.AssignInTime(Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}]", 'method_calls': '{}'}, hash='74aad1777bb649d2ec02ac7afdd5233bcc133e6223966d3a382612af87e9ec44'), <NodeRelationship.PREVIOUS: '2'>: RelatedNodeInfo(node_id='e79f6f40-914e-4c2f-ac9e-02607d8e1f03', node_type='1', metadata={'File Name': 'Entry.java', 'Class Name': 'Entry', 'methods': "[{'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'CheckPayment', 'type': 'Method', 'Signature': 'Entry.CheckPayment(Vehicle,int)', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.CheckPayment(Vehicle,int)']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PaymentOptions', 'type': 'Method', 'Signature': 'Entry.PaymentOptions()', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.PaymentOptions()']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PrePayment', 'type': 'Method', 'Signature': 'Entry.PrePayment(long,Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'AssignInTime', 'type': 'Method', 'Signature': 'Entry.AssignInTime(Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}]", 'method_calls': '{}'}, hash='756fd072cb282313b9ef021b460be2b9723ce2951b4d3600d740a4630c5b6d11'), <NodeRelationship.NEXT: '3'>: RelatedNodeInfo(node_id='6329214b-e6fa-4c13-8238-7c65d88e87c7', node_type='1', metadata={}, hash='ea6270365996bec008a2bc3c8fbacab61de1c04ab2f3d05d6cf15f5a328abbad')}, metadata_template='{key}: {value}', metadata_separator='\n', text='Method Name: PrePayment\nSignature: Entry.PrePayment(long,Vehicle)\nClass Name: Entry', mimetype='text/plain', start_char_idx=205, end_char_idx=288, metadata_seperator='\n', text_template='{metadata_str}\n\n{content}'), score=0.5420724958739845)], metadata={'af1a6316-7e33-44c1-9be9-85c69ed82115': {'File Name': 'Entry.java', 'Class Name': 'Entry', 'methods': "[{'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'CheckPayment', 'type': 'Method', 'Signature': 'Entry.CheckPayment(Vehicle,int)', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.CheckPayment(Vehicle,int)']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PaymentOptions', 'type': 'Method', 'Signature': 'Entry.PaymentOptions()', 'Method Docstring': None, 'calls': [], 'called_by': ['Entries_Exits.PaymentOptions()']}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'PrePayment', 'type': 'Method', 'Signature': 'Entry.PrePayment(long,Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}, {'Class Name': 'Entry', 'File Name': 'Entry.java', 'Method Name': 'AssignInTime', 'type': 'Method', 'Signature': 'Entry.AssignInTime(Vehicle)', 'Method Docstring': None, 'calls': [], 'called_by': []}]", 'method_calls': '{}'}}), 'EA5.txt': Response(response='<<INSTRUCTIONS>>\nContext information is below:\n---------------------\nClass Name: ElectricCar\n\nClass Name: ElectricCar\nAttributes: \ncharge: int\n\n\n\nMethods:\n---------------------\nUsing ONLY this context (no prior knowledge), answer:\n\nWhat are the names of the classes that are related to the following use case requirement?\nIf a user parks an electric vehicle, they have the option to charge it. The system calculates the cost based on units consumed and updates the final bill accordingly.\n\nProvide the answer in a list format and provide ONLY the list of class names as a JSON list.\n[<"Class 1 Name">, <"Class 2 Name">, ... <"Class N Name">] where N can be up to 10.\n\n\nDo NOT repeat these instructions.\n<<ANSWER>>\n["ElectricCar"]', source_nodes=[NodeWithScore(node=TextNode(id_='d45c43be-8340-4d0e-944b-6df94db3fe4a', embedding=None, metadata={'File Name': 'ElectricCar.java', 'Class Name': 'ElectricCar', 'methods': '[]', 'method_calls': '{}'}, excluded_embed_metadata_keys=['File Name', 'method_calls', 'methods'], excluded_llm_metadata_keys=['File Name', 'method_calls', 'methods'], relationships={<NodeRelationship.SOURCE: '1'>: RelatedNodeInfo(node_id='244a881e-326a-4359-8747-4f4f94d7f896', node_type='4', metadata={'File Name': 'ElectricCar.java', 'Class Name': 'ElectricCar', 'methods': '[]', 'method_calls': '{}'}, hash='fa5cfc30b020d0395d6ed6b599e5b8443bfa80bd1661a31150e2794b5d67b64c')}, metadata_template='{key}: {value}', metadata_separator='\n', text='Class Name: ElectricCar\nAttributes: \ncharge: int\n\n\n\nMethods:', mimetype='text/plain', start_char_idx=0, end_char_idx=60, metadata_seperator='\n', text_template='{metadata_str}\n\n{content}'), score=0.48780442049112455)], metadata={'d45c43be-8340-4d0e-944b-6df94db3fe4a': {'File Name': 'ElectricCar.java', 'Class Name': 'ElectricCar', 'methods': '[]', 'method_calls': '{}'}})}
+"""
+    get_post_processing_results(response_text)
+
 
 
 def get_solutions(file_name):
@@ -205,6 +335,7 @@ def evaluate_from_retriever(
             json.dump(config_results, f, indent=4)
 
 
+count = 0
 def evaluate_response(
         req_nodes: List[Document], 
         query_engines: dict,
@@ -212,14 +343,14 @@ def evaluate_response(
         dataset_name: str = 'tmp',
         results_dir: str = 'results',
     ):
+    global count
     results = dict()
     print("Getting solutions")
     solutions = get_solutions(solutions_file)
     print("Solutions obtained")
-
     for config, query_engine in query_engines.items():
         print(f"Evaluating for {config}")
-        req_results = query_parallel(   #query_parrallel
+        req_results = query_parallel( 
             query_engine, 
             CLASS_TRACE_TEMPLATE, 
             req_nodes, 
@@ -227,10 +358,11 @@ def evaluate_response(
         )
         print("Evaluating parallel ended")
         llm_results = get_post_processing_results(req_results)
-        traceability_file = f"{results_dir}/{dataset_name}_{config}_traceability_links.json"
+        traceability_file = f"{results_dir}/{dataset_name}_{config}_traceability_link_{count}.json"
         with open(traceability_file, 'w') as trace_file:
             json.dump(llm_results, trace_file, indent=4)
         print(f"Traceability links saved in {traceability_file}")
+        count = count + 1
         print(f"Results for {config}")
         config_results = compare_solutions(solutions, llm_results)
         print("Results compared")
@@ -245,17 +377,15 @@ def evaluate_response(
 
 def get_questions_from_nodes(nodes):
     print("RAG Dataset Generation")
-    # ✅ Extract and prepare context_str from nodes
-    context_str = "\n".join([node.text for node in nodes])  # Concatenating all node texts
-
-    # ✅ Format the query template with extracted context
+    
+    context_str = "\n".join([node.text for node in nodes])  
     formatted_query = REQ2CODE_QA_TEMPLATE.format(
-        context_str=context_str,  # Add the missing context_str
+        context_str=context_str,
         num_questions_per_chunk=1
     )
     dataset_generator = RagDatasetGenerator.from_documents(
         nodes,
-        num_questions_per_chunk=1,  # set the number of questions per nodes
+        num_questions_per_chunk=1,
         show_progress=True,
         question_gen_query=formatted_query,
         workers=8,

@@ -21,7 +21,7 @@ LLMsMap = {
     LLMs.MISTRAL_8X22B.value: "mistralai/Mixtral-8x22B-Instruct-v0.1",
     LLMs.MISTRAL_7B.value: "mistralai/Mixtral-7B-Instruct-v0.1",
     LLMs.CODELLAMA.value: "codellama/CodeLlama-70b-Instruct-hf",
-    LLMs.LLAMA3.value: "google/gemma-2-2b",
+    LLMs.LLAMA3.value: "mistralai/Mixtral-7B-Instruct-v0.2",
     LLMs.GOOGLE_GEMMA.value: "google/gemma-7b-it",
     LLMs.COMMANDR_PLUS.value: "command-r-plus",
     LLMs.COMMANDR.value: "command-r",

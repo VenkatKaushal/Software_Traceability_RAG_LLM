@@ -8,7 +8,7 @@ from constants import (
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument('--base_dir', type=str, default='data_repos/ftlr/datasets')
-    parser.add_argument('--dataset_name', type=str, default='eTour')
+    parser.add_argument('--dataset_name', type=str, default='eANCI')
     parser.add_argument('--all_code_files_path', type=str, default='all_code_filenames.txt')
     parser.add_argument('--all_req_filenames', type=str, default='all_req_filenames.txt')
     parser.add_argument('--call_graph_file', type=str, default='method_callgraph.json')

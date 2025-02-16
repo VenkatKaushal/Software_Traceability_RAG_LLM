@@ -69,7 +69,7 @@ def get_kg_links_index(
         include_embeddings=True,
     ):
     graph_storage_context = get_graph_store(
-        # db_name=f'nl2code{dataset_name}',
+        # db_name=f'nl2code{dataset_name}',   
         db_name=f'neo4j',
         host_ip=host_ip,
     )
@@ -84,10 +84,10 @@ def get_kg_links_index(
 
 def clean_text(text):
     import re
-    """Cleans the requirement text by removing extra spaces, newlines, and special characters."""
-    text = text.strip()  # Remove leading/trailing spaces
-    text = re.sub(r'\s+', ' ', text)  # Replace multiple spaces/newlines with a single space
-    text = re.sub(r'[^\x00-\x7F]+', '', text)  # Remove non-ASCII characters
+    
+    text = text.strip()  
+    text = re.sub(r'\s+', ' ', text)  
+    text = re.sub(r'[^\x00-\x7F]+', '', text)  
     return text
 
 def get_kw_table_index(
@@ -186,15 +186,7 @@ def execute_dataset(args, dataset_name):
 
     code_nodes, graph_nodes = get_code_nodes(args, dataset_name)
 
-    #store code_nodes, graph_nodes
-    # with open(f'indices/{dataset_name}_code_nodes.pkl', 'wb') as f:
-    #     pickle.dump(code_nodes, f)
-    # with open(f'indices/{dataset_name}_graph_nodes.pkl', 'wb') as f:
-    #     pickle.dump(graph_nodes, f)
-    
     add_method_call_links_to_docs(code_nodes, rel_type='parent')
-    # with open(f'indices/{dataset_name}_code_nodes_updated.pkl', 'wb') as f:
-    #     pickle.dump(code_nodes, f)
 
     parser = get_parser()
     print(f"Getting nodes from documents...")
@@ -202,20 +194,7 @@ def execute_dataset(args, dataset_name):
     with open(f'indices/{dataset_name}_docs.pkl', 'wb') as f:
         pickle.dump(docs, f)
     print(f"Number of nodes: {len(docs)}")
-
-
-    #  Cleaning swap memory before proceeding
-    # subprocess.run(["sudo", "swapoff", "-a"])  # Turn off swap
-    # subprocess.run(["sudo", "swapon", "-a"])  # Turn swap back on
-    time.sleep(5)  # Allow CPU to rest
-
     indexed_nodes, vector_index = get_vector_index(docs, indices_path, dataset_name)
-
-    # with open(f'indices/{dataset_name}{"_mc" if args.add_method_calls else ""}.pkl', 'wb') as f:
-    #     pickle.dump(indexed_nodes, f)
-    
-    # with open(f'indices/{dataset_name}_vector_index.pkl', 'wb') as f:
-    #     pickle.dump(vector_index, f)
 
     bm25retriever = BM25Retriever(nodes=docs)
 
@@ -224,12 +203,6 @@ def execute_dataset(args, dataset_name):
         similarity_top_k=args.similarity_top_k,
         num_queries=args.num_queries,
     )
-
-     # Cleaning swap memory before proceeding
-    # subprocess.run(["sudo", "swapoff", "-a"])  # Turn off swap
-    # subprocess.run(["sudo", "swapon", "-a"])  # Turn swap back on
-    print("CPU Sleeping")
-    time.sleep(5)  # Allow CPU to rest
 
     print(f"Creating KG Links Index...")
 
@@ -242,62 +215,34 @@ def execute_dataset(args, dataset_name):
         args.host_ip,
         include_embeddings=args.include_embeddings
     )
-
-    # with open(f'indices/{dataset_name}_kg_links_index.pkl', 'wb') as f:
-    #     pickle.dump(kg_links_index, f)
-
     print(f"KG Links Index created.")
 
-    # print(f"Creating KG Index...")
-    # kg_index = get_kg_index(docs, dataset_name, args.host_ip)
-    # with open(f'indices/{dataset_name}_kg_index.pkl', 'wb') as f:
-    #     pickle.dump(kg_index, f)
-    # print("One Done")
-    # kw_index = get_kw_table_index(docs, indices_path, dataset_name)
-    # with open(f'indices/{dataset_name}_kw_index.pkl', 'wb') as f:
-    #     pickle.dump(kw_index, f)
-    # print(f"Indices created.")
-
-    #Storage
-    
-
-
-
-
-     # Cleaning swap memory before proceeding
-    # subprocess.run(["sudo", "swapoff", "-a"])  # Turn off swap
-    # subprocess.run(["sudo", "swapon", "-a"])  # Turn swap back on
-    time.sleep(5)  # Allow CPU to rest
+    print(f"Creating KG Index...")
+    kg_index = get_kg_index(docs, dataset_name, args.host_ip)
+    kw_index = get_kw_table_index(docs, indices_path, dataset_name)
+    with open(f'indices/{dataset_name}_kw_index.pkl', 'wb') as f:
+        pickle.dump(kw_index, f)
+    print(f"Indices created.")
 
     query_engines = {
         'vector_index': vector_index.as_query_engine(response_mode='refine', similarity_top_k=10),
         'fusion_qe_index': fusion_qe,
         'kg_links_index': kg_links_index.as_query_engine(),
-        # 'kg_index': kg_index.as_query_engine(),
-        # 'kw_index': kw_index.as_query_engine(),
+        'kg_index': kg_index.as_query_engine(),
+        'kw_index': kw_index.as_query_engine(),
         'vector_kg_links': custom_query_engine(
             vector_index.as_retriever(),
             kg_links_index.as_retriever(),
         ),
-        # 'vector_kw_table': custom_query_engine(
-        #     vector_index.as_retriever(),
-        #     # kg_links_index.as_retriever(),
-        #     kw_index.as_retriever(),
-        # ),
-        # 'vector_kg': custom_query_engine(
-        #     vector_index.as_retriever(),
-        #     # kg_links_index.as_retriever(),
-        #     kg_index.as_retriever(),
-        # ),
+        'vector_kw_table': custom_query_engine(
+            vector_index.as_retriever(),
+            kw_index.as_retriever(),
+        ),
+        'vector_kg': custom_query_engine(
+            vector_index.as_retriever(),
+            kg_index.as_retriever(),
+        ),
     }
-
-    # with open(f'indices/{dataset_name}_query_engines.pkl', 'wb') as f:
-    #     pickle.dump(query_engines, f)
-
-    # Cleaning swap before processing next heavy task
-    # subprocess.run(["sudo", "swapoff", "-a"])  # Turn off swap
-    # subprocess.run(["sudo", "swapon", "-a"])  # Turn swap back on
-    time.sleep(5)  # Allow CPU to rest
 
 
     req_nodes = get_requirements_nodes(
@@ -305,19 +250,14 @@ def execute_dataset(args, dataset_name):
         all_req_files_path=args.all_req_filenames,
     )
 
-    # with open(f'indices/{dataset_name}_req_nodes.pkl', 'wb') as f:
-    #     pickle.dump(req_nodes, f)
-
     req_nodes = [
     Document(
-        text=clean_text(node.text),  # Clean only the text
-        metadata=node.metadata        # Preserve metadata (e.g., file_name)
+        text=clean_text(node.text),  
+        metadata=node.metadata       
     )
     for node in req_nodes
-]
     
-    # with open(f'indices/{dataset_name}_req_nodes_updated.pkl', 'wb') as f:
-    #     pickle.dump(req_nodes, f)
+    ]
     
     print("Evaluating correctness...")
     correctness_results = evaluate_response(
@@ -327,26 +267,25 @@ def execute_dataset(args, dataset_name):
         dataset_name=dataset_name
     )
 
-    # with open(f'indices/{dataset_name}_correctness_results.pkl', 'wb') as f:
-    #     pickle.dump(correctness_results, f)
+    """
+    If Futher Evaluation of the RAG System, to test it on new set of generated questions. Uncomment below code
+    """
 
-    print("Completed Evaluating")
-    questions = get_questions_from_nodes(code_nodes)
-    # with open(f'indices/{dataset_name}_questions.pkl', 'wb') as f:
-    #     pickle.dump(questions, f)
-    print(f"Number of questions: {len(questions)}")
-    eval_results = evaluate_retrieval(
-        questions, query_engines, dataset_name
-    )
-    # with open(f'indices/{dataset_name}_eval_results.pkl', 'wb') as f:
-    #     pickle.dump(eval_results, f)
-    print("Results on the way")
-    results = {
-        'correctness': correctness_results,
-        'evaluation': eval_results,
-    }
-    with open(f'results/{dataset_name}_results.json', 'w') as f:
-        json.dump(results, f, indent=4)
+    # print("Completed Evaluating")
+    # questions = get_questions_from_nodes(code_nodes)
+   
+    # print(f"Number of questions: {len(questions)}")
+    # eval_results = evaluate_retrieval(
+    #     questions, query_engines, dataset_name
+    # )
+   
+    # print("Results on the way")
+    # results = {
+    #     'correctness': correctness_results,
+    #     'evaluation': eval_results,
+    # }
+    # with open(f'results/{dataset_name}_results.json', 'w') as f:
+    #     json.dump(results, f, indent=4)
 
 
 def main():
@@ -357,7 +296,7 @@ def main():
         # ('eTour', 'bge_large')
     ]
     args = parse_args()
-    dataset_name = 'iTrust'
+    dataset_name = 'eANCI'
     embed_model = 'bge_large'
 
 

@@ -297,7 +297,7 @@ def get_code_graph_nodes(
     ):
     java_code_dir = f'{base_dir}/code'
 
-    analysis_data = run_java_analysis_tool(java_code_dir)
+    #analysis_data = run_java_analysis_tool(java_code_dir)
 
     print("Extracting class info objects")
     class_info_objects = get_class_info_objects(base_dir, all_code_files_path)
@@ -309,16 +309,16 @@ def get_code_graph_nodes(
     add_methods_to_class_nodes(graph_nodes)
     print("Done!")
 
-    for node in graph_nodes:
-        class_name = node.get('class_name')
-        if class_name in analysis_data:
-            node["ast"] = analysis_data[class_name].get("AST", "")
-            node["cfg"] = analysis_data[class_name].get("CFG", [])
-            node["fdg"] = analysis_data[class_name].get("FDG", [])
-        else:
-            node["ast"] = ""
-            node["cfg"] = []
-            node["fdg"] = []
+    #for node in graph_nodes:
+    #    class_name = node.get('class_name')
+    #    if class_name in analysis_data:
+    #        node["ast"] = analysis_data[class_name].get("AST", "")
+    #        node["cfg"] = analysis_data[class_name].get("CFG", [])
+    #        node["fdg"] = analysis_data[class_name].get("FDG", [])
+    #    else:
+    #        node["ast"] = ""
+    #        node["cfg"] = []
+    #        node["fdg"] = []
 
     return graph_nodes
 
