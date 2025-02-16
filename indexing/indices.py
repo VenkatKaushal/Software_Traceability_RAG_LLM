@@ -66,7 +66,7 @@ from llama_index import *
 from llama_index.core import StorageContext
 
 neo4j_username = "neo4j"
-neo4j_password = "v$9-tUAz!U,93=;"
+neo4j_password = os.getenv("NEO4J_PASSWORD")
 neo4j_url = "neo4j://localhost:7687"
 neo4j_database = "neo4j"
 
