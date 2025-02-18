@@ -17,7 +17,7 @@ from llama_index.core.indices.keyword_table import KeywordTableGPTRetriever
 
 from typing import List
 from prompts.templates import SCENARIO_GEN_TEMPLATE
-from retrievers import FusionRetriever
+from retrievers import FusionRetriever, GraphRetriever
 
 
 def get_fusion_qe(
@@ -55,9 +55,9 @@ def query_parallel(
         num_threads=8,
     ):
 
-    if isinstance(query_engine, GraphRetriever)
+    if isinstance(query_engine, GraphRetriever):
         print("Using GraphRetriever, skipping parallel queries.")
-        return {req.metadata["file_name"]: query_engine._retrieve(req.text) for req in req_nodes}
+        return {req.metadata["file_name"]: [words.capitalize() for words in query_engine._retrieve(req.text)[req.metadata["file_name"]]] for req in req_nodes}
         
     progress_bar = tqdm(total=len(req_nodes), desc="Querying Requirements", unit="Requirement")
     futures = list()

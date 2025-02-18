@@ -42,8 +42,8 @@ from llama_index.core.indices import (
 
 from parameters import parse_args
 from req2nodes import get_requirements_graph
-from retrievers import GraphRetriever
-
+from retrievers import GraphRetriever, CustomQueryEngineRetriever
+import networkx as nx
 
 def get_vector_index(docs, indices_path, dataset_name):
     print(f"Creating Vector Index...")
@@ -242,10 +242,8 @@ def execute_dataset(args, dataset_name):
     for node in req_nodes
     
     ]
-
-    req_graph = get_requirements_graph(dataset_dir, all_req_files_path=args.all_req_filenames)
-    print(f"Requirements Graph created with {req_graph.number_of_nodes()} nodes and {req_graph.number_of_edges()} edges.")
-    graph_retriever = GraphRetriever(graph=req_graph, req_nodes=req_nodes, top_k=5)
+    graph = nx.read_gexf(f"requirements_graphs/traceability_graph.gexf")
+    graph_retriever = GraphRetriever(graph=graph, req_nodes=req_nodes, top_k=5)
 
 
     query_engines = {
@@ -267,14 +265,6 @@ def execute_dataset(args, dataset_name):
         #     kg_index.as_retriever(),
         # ),
         'graph_retriever': graph_retriever,
-        'vector_graph_retriever': custom_query_engine(
-            vector_index.as_retriever(),
-            graph_retriever,
-        ),
-        "kg_links_graph_retriever": custom_query_engine(
-            kg_links_index.as_retriever(),
-            graph_retriever,
-        ),
     }
 
     
