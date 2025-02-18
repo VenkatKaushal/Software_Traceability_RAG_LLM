@@ -54,6 +54,11 @@ def query_parallel(
         req_nodes: List[Document], 
         num_threads=8,
     ):
+
+    if isinstance(query_engine, GraphRetriever)
+        print("Using GraphRetriever, skipping parallel queries.")
+        return {req.metadata["file_name"]: query_engine._retrieve(req.text) for req in req_nodes}
+        
     progress_bar = tqdm(total=len(req_nodes), desc="Querying Requirements", unit="Requirement")
     futures = list()
     with ThreadPoolExecutor(max_workers=num_threads) as executor:
