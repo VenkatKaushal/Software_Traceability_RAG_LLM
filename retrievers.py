@@ -23,33 +23,83 @@ from indexing.constants import CLASS_NAME_LABEL
 from prompts.templates import SCENARIO_GEN_TEMPLATE
 
 
-class GraphRetriever(BaseRetriever):
-    def __init__(self, graph, req_nodes, top_k=5):
-        """
-        graph: nx.Graph representing requirement relationships.
-        req_nodes: list of Document nodes (requirements).
-        top_k: number of neighbors to consider per matched node.
-        """
+# class GraphRetriever(BaseRetriever):
+#     def __init__(self, graph, req_nodes, top_k=5):
+#         """
+#         graph: nx.Graph representing requirement relationships.
+#         req_nodes: list of Document nodes (requirements).
+#         top_k: number of neighbors to consider per matched node.
+#         """
        
+#         self.req_nodes = {node.metadata["file_name"]: node for node in req_nodes}
+#         self.graph = graph
+#         self.top_k = top_k
+
+#     def _retrieve(self, query: str):
+        
+#         matched = []
+#         for file_name, node in self.req_nodes.items():
+#             if query.lower() in node.text.lower():
+#                 matched.append(file_name)
+
+       
+#         expanded = set(matched)
+#         for file_name in matched:
+            
+#             neighbors = list(self.graph.neighbors(file_name))
+#             expanded.update(neighbors[:self.top_k])
+        
+#         return [self.req_nodes[name] for name in expanded if name in self.req_nodes]
+
+
+class GraphRetriever(BaseRetriever):
+    def __init__(self, graph_path: str, req_nodes: list[Document], top_k=5):
+        """
+        Graph-based retriever for requirement-to-code traceability.
+        graph_path: Path to stored requirement graphs.
+        req_nodes: list of Document nodes.
+        top_k: Number of neighbors to include.
+        """
         self.req_nodes = {node.metadata["file_name"]: node for node in req_nodes}
-        self.graph = graph
+        self.graphs = {file: nx.read_gexf(os.path.join(graph_path, file)) for file in os.listdir(graph_path)}
         self.top_k = top_k
 
     def _retrieve(self, query: str):
+        """
+        Builds a graph that links requirements to code files based on class mentions.
+        """
+        os.makedirs(save_dir, exist_ok=True)
+        class_names = extract_class_names_from_code(code_dir)
         
-        matched = []
-        for file_name, node in self.req_nodes.items():
-            if query.lower() in node.text.lower():
-                matched.append(file_name)
+        for node in requirement_nodes:
+            graph = nx.DiGraph()
+            file_name = node.metadata.get("file_name")
+            graph.add_node(file_name, text=node.text)
+    
+            # Link to matching Java classes
+            for class_name in class_names:
+                if class_name in node.text:
+                    graph.add_edge(file_name, class_name, relation="related_to_class")
+    
+            # Save the graph
+            nx.write_gexf(graph, f"{save_dir}/{file_name}.gexf")
+        return graph
 
-       
-        expanded = set(matched)
-        for file_name in matched:
-            
-            neighbors = list(self.graph.neighbors(file_name))
-            expanded.update(neighbors[:self.top_k])
+    def extract_class_names_from_code(code_dir):
+        """
+        Extracts Java class names from all Java files in the given directory.
+        """
+        class_names = set()
         
-        return [self.req_nodes[name] for name in expanded if name in self.req_nodes]
+        for file_name in os.listdir(code_dir):
+            if file_name.endswith(".java"):
+                with open(os.path.join(code_dir, file_name), 'r', encoding="utf-8") as f:
+                    content = f.read()
+                    match = re.search(r'class\s+(\w+)', content)  # Find class name
+                    if match:
+                        class_names.add(match.group(1))  # Add class name
+        
+        return class_names
 
 
 
