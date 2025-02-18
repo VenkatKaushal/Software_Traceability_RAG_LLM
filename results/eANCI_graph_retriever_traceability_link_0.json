@@ -1,17 +1,25 @@
 {
     "EA1.txt": [
+        "User",
+        "Slot",
+        "Vehicle",
         "Entry"
     ],
     "EA2.txt": [
+        "User",
         "Exit"
     ],
     "EA3.txt": [
-        "Vehicle"
+        "Slot",
+        "User",
+        "Vehicle",
+        "Floor"
     ],
     "EA4.txt": [
-        "Entry"
+        "Exit"
     ],
     "EA5.txt": [
+        "User",
         "Vehicle"
     ]
 }

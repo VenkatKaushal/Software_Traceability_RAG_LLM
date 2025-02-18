@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2025-02-19">
+    <creator>NetworkX 3.4.2</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <attributes mode="static" class="edge">
+      <attribute id="2" title="relation" type="string" />
+    </attributes>
+    <attributes mode="static" class="node">
+      <attribute id="0" title="text" type="string" />
+      <attribute id="1" title="type" type="string" />
+    </attributes>
+    <nodes>
+      <node id="EA1.txt" label="EA1.txt">
+        <attvalues>
+          <attvalue for="0" value="A user arrives at the parking facility and selects the entry gate. The system verifies if the fee has been prepaid or requires payment. The user is assigned a parking slot based on vehicle type." />
+          <attvalue for="1" value="requirement" />
+        </attvalues>
+      </node>
+      <node id="entry" label="entry">
+        <attvalues>
+          <attvalue for="1" value="code_file" />
+        </attvalues>
+      </node>
+      <node id="slot" label="slot">
+        <attvalues>
+          <attvalue for="1" value="code_file" />
+        </attvalues>
+      </node>
+      <node id="user" label="user">
+        <attvalues>
+          <attvalue for="1" value="code_file" />
+        </attvalues>
+      </node>
+      <node id="vehicle" label="vehicle">
+        <attvalues>
+          <attvalue for="1" value="code_file" />
+        </attvalues>
+      </node>
+      <node id="EA2.txt" label="EA2.txt">
+        <attvalues>
+          <attvalue for="0" value="The user proceeds to an exit gate where the system verifies parking duration and generates a bill. Any outstanding fees must be settled before exit approval is granted." />
+          <attvalue for="1" value="requirement" />
+        </attvalues>
+      </node>
+      <node id="exit" label="exit">
+        <attvalues>
+          <attvalue for="1" value="code_file" />
+        </attvalues>
+      </node>
+      <node id="EA3.txt" label="EA3.txt">
+        <attvalues>
+          <attvalue for="0" value="The system dynamically assigns available slots based on vehicle type, ensuring proper space utilization. If no suitable slot is available, the user is prompted to wait or choose another floor." />
+          <attvalue for="1" value="requirement" />
+        </attvalues>
+      </node>
+      <node id="floor" label="floor">
+        <attvalues>
+          <attvalue for="1" value="code_file" />
+        </attvalues>
+      </node>
+      <node id="EA4.txt" label="EA4.txt">
+        <attvalues>
+          <attvalue for="0" value="Users can prepay for parking or pay upon exit using different payment methods (card, attendant, or portal). The system maintains a record of payments and balances." />
+          <attvalue for="1" value="requirement" />
+        </attvalues>
+      </node>
+      <node id="EA5.txt" label="EA5.txt">
+        <attvalues>
+          <attvalue for="0" value="If a user parks an electric vehicle, they have the option to charge it. The system calculates the cost based on units consumed and updates the final bill accordingly." />
+          <attvalue for="1" value="requirement" />
+        </attvalues>
+      </node>
+    </nodes>
+    <edges>
+      <edge source="EA1.txt" target="entry" id="0">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA1.txt" target="slot" id="1">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA1.txt" target="user" id="2">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA1.txt" target="vehicle" id="3">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA2.txt" target="user" id="4">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA2.txt" target="exit" id="5">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA3.txt" target="slot" id="6">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA3.txt" target="user" id="7">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA3.txt" target="vehicle" id="8">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA3.txt" target="floor" id="9">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA4.txt" target="exit" id="10">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA5.txt" target="user" id="11">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+      <edge source="EA5.txt" target="vehicle" id="12">
+        <attvalues>
+          <attvalue for="2" value="mentions" />
+        </attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>

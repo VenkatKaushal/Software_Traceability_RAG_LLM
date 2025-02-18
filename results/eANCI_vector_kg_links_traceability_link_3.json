@@ -1,27 +1,26 @@
 {
     "EA1.txt": [
-        "Management",
+        "Exit",
         "Entry",
-        "User",
-        "Vehicle",
-        "Exit"
+        "User"
     ],
     "EA2.txt": [
-        "Entry",
-        "Exit"
+        "Exit",
+        "Entry"
     ],
     "EA3.txt": [
-        "Entry",
         "Exit",
+        "Entry",
         "Vehicle"
     ],
     "EA4.txt": [
-        "PaymentOptions",
+        "Exit",
         "Entry"
     ],
     "EA5.txt": [
-        "Entry",
+        "Vehicle",
         "Exit",
-        "ElectricCar"
+        "Entry",
+        "User"
     ]
 }

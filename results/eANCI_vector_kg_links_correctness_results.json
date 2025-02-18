@@ -12,9 +12,7 @@
             "llm_classes": [
                 "Entry",
                 "Exit",
-                "Management",
-                "User",
-                "Vehicle"
+                "User"
             ]
         },
         {
@@ -55,7 +53,7 @@
             ],
             "llm_classes": [
                 "Entry",
-                "PaymentOptions"
+                "Exit"
             ]
         },
         {
@@ -67,15 +65,16 @@
                 "Vehicle"
             ],
             "llm_classes": [
-                "ElectricCar",
                 "Entry",
-                "Exit"
+                "Exit",
+                "User",
+                "Vehicle"
             ]
         }
     ],
     {
-        "precision": 0.5333333333333333,
+        "precision": 0.5714285714285714,
         "recall": 0.36363636363636365,
-        "f1": 0.43243243243243246
+        "f1": 0.4444444444444444
     }
 ]

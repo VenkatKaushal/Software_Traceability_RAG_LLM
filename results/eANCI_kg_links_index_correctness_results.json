@@ -10,9 +10,10 @@
                 "Vehicle"
             ],
             "llm_classes": [
-                "Entries_exits",
+                "Entry",
+                "Exit",
                 "User",
-                "Vehicles"
+                "Vehicle"
             ]
         },
         {
@@ -39,6 +40,7 @@
             ],
             "llm_classes": [
                 "Entries_Exits",
+                "Floor",
                 "Vehicles"
             ]
         },
@@ -51,11 +53,8 @@
                 "Vehicle"
             ],
             "llm_classes": [
-                "Car",
-                "Class",
-                "Entries_Exits",
-                "PaymentOptions",
-                "Vehicles"
+                "Entry",
+                "Exit"
             ]
         },
         {
@@ -75,8 +74,8 @@
         }
     ],
     {
-        "precision": 0.25,
-        "recall": 0.18181818181818182,
-        "f1": 0.2105263157894737
+        "precision": 0.6,
+        "recall": 0.4090909090909091,
+        "f1": 0.4864864864864865
     }
 ]
