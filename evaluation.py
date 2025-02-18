@@ -357,7 +357,8 @@ def evaluate_response(
             num_threads=8,
         )
         print("Evaluating parallel ended")
-        llm_results = get_post_processing_results(req_results)
+        if not isinstance(query_engine, GraphRetriever):
+            llm_results = get_post_processing_results(req_results)
         traceability_file = f"{results_dir}/{dataset_name}_{config}_traceability_link_{count}.json"
         with open(traceability_file, 'w') as trace_file:
             json.dump(llm_results, trace_file, indent=4)
